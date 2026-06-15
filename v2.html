@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Kindling II — the hearth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;1,300&display=swap" rel="stylesheet" />
+<style>
+  :root{ --void:#070608; --text:#e9d8c4; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;overflow:hidden;background:var(--void);}
+  body{
+    font-family:"Cormorant", Georgia, "Times New Roman", serif;
+    color:var(--text);
+    -webkit-tap-highlight-color:transparent;
+    touch-action:none;
+  }
+  #field{display:block;position:fixed;inset:0;}
+
+  /* The words arrive, then step aside — same manners as the first. */
+  #veil{
+    position:fixed;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;pointer-events:none;
+    text-align:center;gap:1.1rem;
+    transition:opacity 2.6s ease 3.4s;
+  }
+  #veil.lift{opacity:0;}
+  #title{
+    font-size:clamp(2.6rem,11vw,5.4rem);
+    font-weight:300;font-style:italic;letter-spacing:.04em;
+    color:#fbe6cf;opacity:0;
+    text-shadow:0 0 46px rgba(255,150,52,.34);
+    animation:bloom 3s ease forwards .5s;
+  }
+  #hint{
+    font-family:ui-monospace,"SF Mono",Menlo,monospace;
+    font-size:.72rem;letter-spacing:.30em;text-transform:uppercase;
+    font-style:normal;color:rgba(233,216,196,.42);opacity:0;
+    animation:bloom 2.4s ease forwards 1.8s;
+  }
+  #mark{
+    position:fixed;left:clamp(16px,4vw,34px);bottom:clamp(14px,3.4vh,28px);
+    font-size:1.05rem;font-style:italic;font-weight:300;
+    color:rgba(251,230,207,.0);letter-spacing:.05em;pointer-events:none;
+    transition:color 3s ease 4.4s;
+  }
+  #mark.show{color:rgba(251,230,207,.36);}
+  @keyframes bloom{to{opacity:1;}}
+  @media (prefers-reduced-motion:reduce){
+    #title,#hint{animation-duration:.01ms;animation-delay:0ms;opacity:1;}
+    #veil{transition:opacity 1s ease 6s;}
+  }
+</style>
+</head>
+<body>
+  <canvas id="field"></canvas>
+  <div id="veil">
+    <div id="title">Kindling</div>
+    <div id="hint">breathe on the embers</div>
+  </div>
+  <div id="mark">Kindling II</div>
+
+<script>
+(() => {
+  "use strict";
+  const canvas = document.getElementById("field");
+  const ctx = canvas.getContext("2d", { alpha: false });
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---- palette: cold is the ash a thing falls to; warmth is tended into being ----
+  const ASH   = [58, 66, 104];   // a cold ember — periwinkle, almost out
+  const EMBER = [232, 138, 58];  // catching — amber
+  const FLARE = [255, 244, 222]; // white-hot — a fire fully caught
+
+  let W = 0, H = 0, DPR = 1;
+  let embers = [];
+  let sparks = [];
+  let spacing = 60, link = 90, link2 = 8100;
+  let breath = 0, fieldHeat = 0, nextIgnite = 0;
+  const pointer = { x: 0, y: 0, px: 0, py: 0, active: false };
+
+  // depth: three planes, far -> near. nearer embers are larger, brighter, swifter.
+  const LAYERS = [
+    { depth: 0.42, size: 0.34, drift: 0.55, alpha: 0.5 },
+    { depth: 0.70, size: 0.62, drift: 0.80, alpha: 0.75 },
+    { depth: 1.00, size: 1.00, drift: 1.10, alpha: 1.0 },
+  ];
+
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const mix = (c1, c2, t) => [ lerp(c1[0],c2[0],t), lerp(c1[1],c2[1],t), lerp(c1[2],c2[2],t) ];
+
+  // ---- a soft round light, drawn once, reused — bloom without the cost ----
+  const sprite = document.createElement("canvas");
+  const sctx = sprite.getContext("2d");
+  function buildSprite(){
+    const s = 64; sprite.width = s; sprite.height = s;
+    const g = sctx.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);
+    g.addColorStop(0,   "rgba(255,255,255,1)");
+    g.addColorStop(0.22,"rgba(255,255,255,0.58)");
+    g.addColorStop(0.52,"rgba(255,255,255,0.16)");
+    g.addColorStop(1,   "rgba(255,255,255,0)");
+    sctx.clearRect(0,0,s,s);
+    sctx.fillStyle = g; sctx.fillRect(0,0,s,s);
+  }
+  // tiny cache of tinted sprites, so each ember's bloom takes its own hue
+  const tintCache = new Map();
+  function spriteFor(col){
+    const key = ((col[0]>>4)<<8) | ((col[1]>>4)<<4) | (col[2]>>4);
+    let cv = tintCache.get(key);
+    if (cv) return cv;
+    cv = document.createElement("canvas");
+    cv.width = sprite.width; cv.height = sprite.height;
+    const c = cv.getContext("2d");
+    c.drawImage(sprite, 0, 0);
+    c.globalCompositeOperation = "source-in";
+    c.fillStyle = `rgb(${col[0]|0},${col[1]|0},${col[2]|0})`;
+    c.fillRect(0, 0, cv.width, cv.height);
+    if (tintCache.size > 600) tintCache.clear();
+    tintCache.set(key, cv);
+    return cv;
+  }
+  function glow(x, y, size, col, a){
+    ctx.globalAlpha = a;
+    const s = size * 2;
+    ctx.drawImage(spriteFor(col), x - s/2, y - s/2, s, s);
+  }
+
+  // ---- the wind: a slow flowing field the embers ride (murmuration) ----
+  function flowAngle(x, y, t){
+    const a = Math.sin(x * 0.0016 + t * 0.00022)
+            + Math.cos(y * 0.0015 - t * 0.00019)
+            + Math.sin((x + y) * 0.0009 + t * 0.00014);
+    return a * 2.2;
+  }
+
+  function resize(){
+    DPR = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = Math.floor(W * DPR);
+    canvas.height = Math.floor(H * DPR);
+    canvas.style.width = W + "px";
+    canvas.style.height = H + "px";
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+
+    const area = W * H;
+    const count = Math.max(140, Math.min(360, Math.round(area / 3200)));
+    spacing = Math.sqrt(area / count);
+    link = spacing * 1.7; link2 = link * link;
+
+    if (embers.length !== count){
+      embers = new Array(count).fill(0).map(makeEmber);
+    }
+  }
+
+  function makeEmber(){
+    const layer = LAYERS[(Math.random() * LAYERS.length) | 0];
+    return {
+      x: Math.random() * W, y: Math.random() * H,
+      vx: 0, vy: 0,
+      heat: Math.random() * 0.12,   // most things start nearly cold
+      gain: 0,                      // heat caught from neighbours this frame
+      L: layer,
+    };
+  }
+
+  // ---- spatial grid, so heat only travels between near embers ----
+  let grid = new Map();
+  function cellKey(cx, cy){ return cx * 100000 + cy; }
+  function buildGrid(){
+    grid.clear();
+    const inv = 1 / link;
+    for (let i = 0; i < embers.length; i++){
+      const m = embers[i];
+      const cx = (m.x * inv) | 0, cy = (m.y * inv) | 0;
+      const k = cellKey(cx, cy);
+      let a = grid.get(k);
+      if (!a){ a = []; grid.set(k, a); }
+      a.push(i);
+    }
+  }
+
+  function ignite(x, y, strength, radius){
+    const r2 = radius * radius;
+    for (let i = 0; i < embers.length; i++){
+      const m = embers[i];
+      const dx = m.x - x, dy = m.y - y, d2 = dx*dx + dy*dy;
+      if (d2 < r2){
+        const f = (1 - d2 / r2);
+        m.heat = Math.min(1, m.heat + strength * f);
+      }
+    }
+  }
+  function spontaneous(){
+    if (!embers.length) return;
+    embers[(Math.random() * embers.length) | 0].heat = 1; // a spark, somewhere
+  }
+
+  function spawnSpark(m){
+    if (sparks.length > 280) return;
+    const a = Math.random() * Math.PI * 2;
+    sparks.push({
+      x: m.x, y: m.y,
+      vx: Math.cos(a) * 0.3,
+      vy: -0.5 - Math.random() * 0.9,     // embers rise
+      life: 1, col: mix(EMBER, FLARE, Math.random() * 0.6 + m.heat * 0.4),
+    });
+  }
+
+  // ---- the loop ----
+  let last = performance.now();
+  function frame(now){
+    let dt = (now - last) / 16.667; last = now;
+    if (dt > 3) dt = 3;
+    breath += dt * 0.0045;
+    const breathe = 0.85 + 0.15 * Math.sin(breath);
+
+    if (!reduced){
+      nextIgnite -= dt;
+      if (nextIgnite <= 0){ spontaneous(); nextIgnite = 150 + Math.random() * 220; }
+    }
+
+    // ---- move embers on the wind; tended ones gather toward the touch ----
+    const margin = spacing;
+    let totalHeat = 0;
+    for (let i = 0; i < embers.length; i++){
+      const m = embers[i]; m.gain = 0;
+      if (!reduced){
+        const ang = flowAngle(m.x, m.y, now);
+        const force = 0.018 * m.L.drift * dt;
+        m.vx += Math.cos(ang) * force;
+        m.vy += Math.sin(ang) * force - 0.004 * m.heat * dt; // heat lifts a touch
+      }
+      if (pointer.active){
+        const dx = pointer.x - m.x, dy = pointer.y - m.y;
+        const d2 = dx*dx + dy*dy, R = spacing * 5;
+        if (d2 < R*R){
+          const d = Math.sqrt(d2) || 1, pull = (1 - d / R) * 0.06 * m.L.drift * dt;
+          m.vx += (dx / d) * pull - (dy / d) * pull * 0.7;  // a little swirl — a draft
+          m.vy += (dy / d) * pull + (dx / d) * pull * 0.7;
+        }
+      }
+      // soft walls — a hearth holds its embers
+      if (m.x < margin)     m.vx += (margin - m.x) * 0.0002 * dt;
+      if (m.x > W - margin) m.vx -= (m.x - (W - margin)) * 0.0002 * dt;
+      if (m.y < margin)     m.vy += (margin - m.y) * 0.0002 * dt;
+      if (m.y > H - margin) m.vy -= (m.y - (H - margin)) * 0.0002 * dt;
+
+      m.vx *= 0.96; m.vy *= 0.96;
+      const cap = 0.95, sp2 = m.vx*m.vx + m.vy*m.vy;
+      if (sp2 > cap*cap){ const s = cap / Math.sqrt(sp2); m.vx *= s; m.vy *= s; }
+      m.x += m.vx * dt; m.y += m.vy * dt;
+      totalHeat += m.heat;
+    }
+    fieldHeat += (totalHeat / embers.length - fieldHeat) * 0.05 * dt;
+
+    buildGrid();
+
+    // ---- background: void with a warm vignette that swells as the field catches ----
+    ctx.globalCompositeOperation = "source-over";
+    ctx.fillStyle = "#070608";
+    ctx.fillRect(0, 0, W, H);
+    if (fieldHeat > 0.01){
+      const g = ctx.createRadialGradient(W/2, H*0.62, 0, W/2, H*0.62, Math.max(W,H)*0.75);
+      const a = Math.min(0.5, fieldHeat * 1.4) * breathe;
+      g.addColorStop(0, `rgba(150,64,16,${(a*0.5).toFixed(3)})`);
+      g.addColorStop(1, "rgba(7,6,8,0)");
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    }
+
+    // ---- threads + heat catching across them (one grid-limited pass) ----
+    ctx.globalCompositeOperation = "lighter";
+    ctx.lineWidth = 1;
+    const reach2 = link2 * (reduced ? 1 : (0.9 + 0.1 * Math.sin(breath)));
+    for (const [k, cell] of grid){
+      const cx = Math.floor(k / 100000), cy = k - cx * 100000;
+      for (let oy = 0; oy <= 1; oy++){
+        for (let ox = (oy === 0 ? 0 : -1); ox <= 1; ox++){
+          const other = grid.get(cellKey(cx + ox, cy + oy));
+          if (!other) continue;
+          const same = (ox === 0 && oy === 0);
+          for (let ii = 0; ii < cell.length; ii++){
+            const a = embers[cell[ii]];
+            for (let jj = (same ? ii + 1 : 0); jj < other.length; jj++){
+              const b = embers[other[jj]];
+              const dx = a.x - b.x, dy = a.y - b.y, d2 = dx*dx + dy*dy;
+              if (d2 > reach2) continue;
+              const close = 1 - d2 / reach2;
+              // fire catches: each lends warmth toward the hotter of the pair
+              const flow = close * 0.16 * dt;
+              a.gain += (b.heat - a.heat > 0 ? (b.heat - a.heat) : 0) * flow;
+              b.gain += (a.heat - b.heat > 0 ? (a.heat - b.heat) : 0) * flow;
+
+              const w = (a.heat + b.heat) * 0.5;
+              const col = mix(mix(ASH, EMBER, Math.min(1, w * 1.6)), FLARE, Math.max(0, w - 0.5) * 2);
+              const alpha = close * (0.05 + 0.55 * w) * breathe * Math.min(a.L.alpha, b.L.alpha);
+              if (alpha > 0.005){
+                ctx.strokeStyle = `rgba(${col[0]|0},${col[1]|0},${col[2]|0},${alpha.toFixed(3)})`;
+                ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // ---- settle heat, then draw embers far-plane first for depth ----
+    for (let i = 0; i < embers.length; i++){
+      const m = embers[i];
+      m.heat += m.gain;                          // caught from neighbours
+      m.heat *= (1 - 0.012 * dt);                // and always cooling toward ash
+      if (m.heat > 1) m.heat = 1;
+      if (m.heat < 0.0008) m.heat = 0;
+      if (!reduced && m.heat > 0.72 && Math.random() < 0.05 * m.heat * dt) spawnSpark(m);
+    }
+    embers.sort((p, q) => p.L.depth - q.L.depth);
+
+    for (let i = 0; i < embers.length; i++){
+      const m = embers[i], L = m.L;
+      const col = mix(mix(ASH, EMBER, Math.min(1, m.heat * 1.7)), FLARE, Math.max(0, m.heat - 0.55) * 2.2);
+      const bright = (0.32 + 0.68 * m.heat) * breathe;
+      const size = spacing * L.size * (0.5 + 1.2 * m.heat);
+      glow(m.x, m.y, size, col, Math.min(1, 0.5 * bright * L.alpha));
+      ctx.globalAlpha = Math.min(1, (0.4 + 0.6 * m.heat) * L.alpha);
+      const core = (1 + m.heat * 2.2) * (0.6 + 0.4 * L.depth);
+      ctx.fillStyle = `rgb(${col[0]|0},${col[1]|0},${col[2]|0})`;
+      ctx.beginPath(); ctx.arc(m.x, m.y, core, 0, 6.2832); ctx.fill();
+    }
+
+    // ---- sparks rising off the hottest embers ----
+    for (let i = sparks.length - 1; i >= 0; i--){
+      const s = sparks[i];
+      s.vy -= 0.012 * dt; s.vx *= 0.99; s.vy *= 0.99;
+      s.x += s.vx * dt; s.y += s.vy * dt;
+      s.life -= 0.014 * dt;
+      if (s.life <= 0){ sparks.splice(i, 1); continue; }
+      glow(s.x, s.y, 3 + 4 * s.life, s.col, s.life * 0.5);
+      ctx.globalAlpha = s.life;
+      ctx.fillStyle = `rgb(${s.col[0]|0},${s.col[1]|0},${s.col[2]|0})`;
+      ctx.beginPath(); ctx.arc(s.x, s.y, 0.9 + s.life, 0, 6.2832); ctx.fill();
+    }
+
+    // a soft draft of warmth where attention rests
+    if (pointer.active){ glow(pointer.x, pointer.y, spacing * 2.4, EMBER, 0.45); }
+
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = "source-over";
+    requestAnimationFrame(frame);
+  }
+
+  // ---- touch / pointer: your breath on the embers ----
+  function setPointer(e){
+    const t = e.touches ? e.touches[0] : e;
+    if (!t) return;
+    pointer.px = pointer.x; pointer.py = pointer.y;
+    pointer.x = t.clientX; pointer.y = t.clientY;
+  }
+  function onDown(e){
+    setPointer(e); pointer.px = pointer.x; pointer.py = pointer.y; pointer.active = true;
+    ignite(pointer.x, pointer.y, 1, spacing * 2.4);   // a breath catches the nearest
+    liftVeil();
+  }
+  function onMove(e){
+    if (!pointer.active) return;
+    setPointer(e);
+    ignite(pointer.x, pointer.y, 0.5, spacing * 1.8);  // trailing breath keeps it going
+    e.preventDefault && e.preventDefault();
+  }
+  function onUp(){ pointer.active = false; }
+
+  canvas.addEventListener("mousedown", onDown);
+  window.addEventListener("mousemove", onMove);
+  window.addEventListener("mouseup", onUp);
+  canvas.addEventListener("touchstart", onDown, {passive:true});
+  window.addEventListener("touchmove", onMove, {passive:false});
+  window.addEventListener("touchend", onUp);
+
+  // ---- the words stepping aside ----
+  const veil = document.getElementById("veil");
+  const mark = document.getElementById("mark");
+  let lifted = false;
+  function liftVeil(){
+    if (lifted) return; lifted = true;
+    veil.classList.add("lift"); mark.classList.add("show");
+  }
+  setTimeout(liftVeil, reduced ? 7000 : 6800);
+
+  window.addEventListener("resize", resize);
+  buildSprite();
+  resize();
+  nextIgnite = 60;
+  // a first ember already catching, so the hearth is alive when you arrive
+  setTimeout(() => { spontaneous(); ignite(W * 0.5, H * 0.6, 0.8, spacing * 3); }, 1100);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
