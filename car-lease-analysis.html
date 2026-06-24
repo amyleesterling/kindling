@@ -9,7 +9,7 @@
     --bg:#0c0e16; --panel:#141826; --panel2:#1b2030;
     --text:#e6e9f2; --muted:#9aa3bd; --line:#262c40;
     --gold:#e8a24c; --good:#5fd6a0; --mid:#e8c95f; --warn:#e87a6b;
-    --suv:#5b9cff; --ev:#5fd6a0; --van:#c08bff; --sport:#ff7e8a; --lux:#e8c95f;
+    --suv:#5b9cff; --van:#c08bff; --sport:#ff7e8a; --lux:#e8c95f; --full:#e88f4c;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   body{
@@ -38,41 +38,46 @@
     border-radius:10px; padding:1rem 1.2rem; margin:1.4rem 0;
   }
   .callout.warn{border-left-color:var(--warn);}
-  .callout.ev{border-left-color:var(--ev);}
+  .callout.good{border-left-color:var(--good);}
 
   .tablecard{
     margin:1.2rem 0; border:1px solid var(--line); border-radius:12px; overflow:hidden;
     background:var(--panel);
   }
   .scroll{overflow-x:auto;}
-  table{border-collapse:collapse; width:100%; font-size:.86rem; min-width:760px;}
+  table{border-collapse:collapse; width:100%; font-size:.86rem; min-width:820px;}
   thead th{
     background:var(--panel2); text-align:left; padding:.7rem .7rem; font-weight:600;
     color:var(--muted); border-bottom:1px solid var(--line); white-space:nowrap; font-size:.78rem;
     text-transform:uppercase; letter-spacing:.04em;
   }
-  tbody td{padding:.65rem .7rem; border-bottom:1px solid var(--line); vertical-align:middle;}
+  tbody td{padding:.55rem .7rem; border-bottom:1px solid var(--line); vertical-align:middle;}
   tbody tr:hover{background:rgba(255,255,255,.025);}
   tbody tr:last-child td{border-bottom:none;}
   .rank{font-weight:700; color:var(--gold); font-variant-numeric:tabular-nums;}
   .veh{font-weight:600; color:var(--text);}
+  .veh a{color:var(--text); text-decoration:none; border-bottom:1px dotted var(--muted);}
+  .veh a:hover{color:var(--gold); border-bottom-color:var(--gold);}
   .num{font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap;}
   th.num{text-align:right;}
   .bfb{font-weight:700; font-variant-numeric:tabular-nums; text-align:right;}
 
+  .thumb{width:76px; padding:.3rem .4rem;}
+  .thumb img{width:66px; height:42px; object-fit:contain; background:#0a0c14; border-radius:5px; display:block;}
+  .thumb.noimg::after{content:"🚙"; display:flex; align-items:center; justify-content:center;
+    width:66px; height:42px; background:#0a0c14; border-radius:5px; font-size:1.05rem; opacity:.45;}
+
   .tag{display:inline-block; font-size:.68rem; font-weight:700; letter-spacing:.03em;
     padding:.12rem .45rem; border-radius:20px; text-transform:uppercase; white-space:nowrap;}
   .t-suv{background:rgba(91,156,255,.16); color:#9cc1ff;}
-  .t-ev{background:rgba(95,214,160,.16); color:#7ee6bb;}
   .t-van{background:rgba(192,139,255,.16); color:#d2b0ff;}
   .t-sport{background:rgba(255,126,138,.16); color:#ffa6af;}
   .t-lux{background:rgba(232,201,95,.16); color:#f0db8c;}
+  .t-full{background:rgba(232,143,76,.18); color:#f2b683;}
 
   .lr-good{color:var(--good); font-weight:600;}
   .lr-mid{color:var(--mid);}
   .lr-warn{color:var(--warn);}
-  tbody tr.excl td{opacity:.4;}
-  .xmark{color:var(--warn); font-weight:700;}
   .ok2{color:var(--good); font-weight:600;}
 
   .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin:1.2rem 0;}
@@ -82,6 +87,7 @@
 
   .legend{display:flex; flex-wrap:wrap; gap:.6rem; margin:.8rem 0 0; font-size:.8rem; color:var(--muted);}
   .legend span{display:inline-flex; align-items:center; gap:.35rem;}
+  .tnote{color:var(--muted); font-size:.8rem; margin-top:.5rem;}
   footer{margin-top:3rem; padding-top:1.5rem; border-top:1px solid var(--line); color:var(--muted); font-size:.85rem;}
   .src{font-size:.85rem;} .src li{margin:.25rem 0;}
 </style>
@@ -90,11 +96,10 @@
 <header>
   <div class="wrap">
     <h1>Massachusetts Car Lease Analysis</h1>
-    <p class="sub">Every major SUV, minivan, and sports-car lease offer available in MA / the Northeast, ranked two ways: by <strong>bang for buck</strong> (car per dollar) and by <strong>absolute cost</strong> (lowest out-of-pocket). Plus a gas-only deep dive for the fast-car shopper.</p>
-    <div class="meta-line">Analysis date: June 24, 2026 · Term focus: 36-month leases (10k–12k mi/yr) · Region: Massachusetts / Northeast pricing</div>
+    <p class="sub">Every major <strong>gas &amp; hybrid</strong> SUV, minivan, and sports-car lease offer available in MA / the Northeast — <strong>nothing that needs plugging in, and nothing with fewer than 4 seats</strong> — ranked by <strong>bang for buck</strong> (car per dollar) and by <strong>absolute cost</strong> (lowest out-of-pocket).</p>
+    <div class="meta-line">Analysis date: June 24, 2026 · Gasoline &amp; hybrid only · 4-seat minimum · 36-month leases (10k–12k mi/yr) · Massachusetts / Northeast pricing</div>
     <div class="callout" style="margin-top:1.4rem;margin-bottom:0;border-left-color:var(--sport)">
-      <strong>Shopping for a fast car, can't charge at home, and need 4 seats?</strong> Skip to
-      <a href="#fast">Fast cars — gas only, 4 seats</a>. EVs are excluded there, and 2-seaters (Corvette, GR Supra, Nissan Z) are flagged as not meeting the 4-seat rule.
+      <strong>Scope:</strong> this analysis covers gasoline and conventional-hybrid vehicles with at least four seats. Plug-in battery-electric models are excluded (no home charging required), and so are strict two-seat cars. Jump to <a href="#fast">Fast cars</a> or the <a href="#fullsize">Full-size SUVs &amp; vans</a> section below. <em>Each vehicle name links to live lease listings.</em>
     </div>
   </div>
 </header>
@@ -102,12 +107,12 @@
 <div class="wrap">
 
 <h2>The headline</h2>
-<p class="lead">Across ~30 advertised lease specials in three body styles, the best value is concentrated in <strong>mainstream and electric SUVs</strong>. Minivans cluster in the middle. Sports cars — with one exception — are the worst bang-for-buck of the group, because performance cars hold price and rarely carry lease support.</p>
+<p class="lead">Across ~30 advertised gas &amp; hybrid lease specials in three body styles — all with at least four seats — the best value is concentrated in <strong>mainstream SUVs</strong>. Minivans cluster in the middle. Sports cars, apart from one standout, are the worst bang-for-buck; and among the big body-on-frame haulers, the <strong>Jeep Grand Wagoneer</strong> is the surprise value king.</p>
 
 <div class="grid">
   <div class="stat"><div class="big">#1</div><div class="lbl">Mazda CX-70 — $127 of MSRP per $1 of monthly cost</div></div>
-  <div class="stat"><div class="big">4 of top 5</div><div class="lbl">are electric or hybrid SUVs (incentive-driven)</div></div>
-  <div class="stat"><div class="big">Mustang GT</div><div class="lbl">only sports car to crack the top 10 (#8)</div></div>
+  <div class="stat"><div class="big">#4</div><div class="lbl">Ford Mustang GT — best-value way into a fast car (480-hp V8)</div></div>
+  <div class="stat"><div class="big">Sienna</div><div class="lbl">minivan value leader, #5 overall</div></div>
 </div>
 
 <h2>How "bang for buck" is scored</h2>
@@ -118,86 +123,82 @@
   <li><strong>Bang-for-Buck score (BFB)</strong> = MSRP ÷ EMC = how many dollars of car you control for every $1 of effective monthly cost. <em>Higher is better.</em> This is the column the table is sorted on.</li>
 </ul>
 
-<div class="callout ev">
-  <strong>Massachusetts angle — the MOR-EV rebate.</strong> Leases of <strong>36 months or longer</strong> on EVs/PHEVs with MSRP ≤ $55,000 qualify for the state <a href="https://mor-ev.org/">MOR-EV</a> rebate (up to $3,500, more if income-qualified). Dealers typically bake this into the cap cost, which is a big reason the electric SUVs below land so high. This benefit does <em>not</em> apply to 24-month leases — another reason to favor a 36-month term in MA.
-</div>
-
 <h2>Top 20 — ranked by bang for buck</h2>
 <div class="tablecard">
   <div class="scroll">
   <table>
     <thead>
       <tr>
-        <th>#</th><th>Vehicle</th><th>Type</th>
+        <th>#</th><th>Img</th><th>Vehicle</th><th>Type</th>
         <th class="num">$/mo</th><th class="num">Due</th><th class="num">Term</th>
         <th class="num">~MSRP</th><th class="num">Eff. /mo</th><th class="num">Lease&nbsp;Ratio</th><th class="num">BFB</th>
       </tr>
     </thead>
     <tbody>
-      <tr><td class="rank">1</td><td class="veh">Mazda CX-70 Preferred</td><td><span class="tag t-suv">SUV</span></td><td class="num">$239</td><td class="num">$2,999*</td><td class="num">33</td><td class="num">$42,000</td><td class="num">$330</td><td class="num lr-good">0.79%</td><td class="bfb">127</td></tr>
-      <tr><td class="rank">2</td><td class="veh">Honda Prologue (EV)</td><td><span class="tag t-ev">SUV·EV</span></td><td class="num">$350</td><td class="num">$2,000</td><td class="num">36</td><td class="num">$50,000</td><td class="num">$406</td><td class="num lr-good">0.81%</td><td class="bfb">123</td></tr>
-      <tr><td class="rank">3</td><td class="veh">Nissan Pathfinder SV AWD</td><td><span class="tag t-suv">SUV</span></td><td class="num">$199</td><td class="num">$4,559</td><td class="num">36</td><td class="num">$39,500</td><td class="num">$326</td><td class="num lr-good">0.82%</td><td class="bfb">121</td></tr>
-      <tr><td class="rank">4</td><td class="veh">Hyundai Ioniq 5 (EV)</td><td><span class="tag t-ev">SUV·EV</span></td><td class="num">$340</td><td class="num">$2,000</td><td class="num">36</td><td class="num">$46,000</td><td class="num">$396</td><td class="num lr-good">0.86%</td><td class="bfb">116</td></tr>
-      <tr><td class="rank">5</td><td class="veh">Chevrolet Equinox EV LT</td><td><span class="tag t-ev">SUV·EV</span></td><td class="num">$279</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$40,000</td><td class="num">$362</td><td class="num lr-mid">0.91%</td><td class="bfb">110</td></tr>
-      <tr><td class="rank">6</td><td class="veh">Hyundai Tucson SEL</td><td><span class="tag t-suv">SUV</span></td><td class="num">$249</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$31,000</td><td class="num">$332</td><td class="num lr-mid">1.07%</td><td class="bfb">93</td></tr>
-      <tr><td class="rank">7</td><td class="veh">Kia EV6 Wind</td><td><span class="tag t-ev">SUV·EV</span></td><td class="num">$429</td><td class="num">$2,000</td><td class="num">36</td><td class="num">$45,000</td><td class="num">$485</td><td class="num lr-mid">1.08%</td><td class="bfb">93</td></tr>
-      <tr><td class="rank">8</td><td class="veh">Ford Mustang GT</td><td><span class="tag t-sport">SPORT</span></td><td class="num">$443</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$48,000</td><td class="num">$526</td><td class="num lr-mid">1.10%</td><td class="bfb">91</td></tr>
-      <tr><td class="rank">9</td><td class="veh">Toyota Sienna LE Hybrid</td><td><span class="tag t-van">VAN</span></td><td class="num">$349</td><td class="num">$3,999</td><td class="num">36</td><td class="num">$40,000</td><td class="num">$460</td><td class="num lr-mid">1.15%</td><td class="bfb">87</td></tr>
-      <tr><td class="rank">10</td><td class="veh">Chrysler Pacifica Select</td><td><span class="tag t-van">VAN</span></td><td class="num">$413</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$43,000</td><td class="num">$496</td><td class="num lr-mid">1.15%</td><td class="bfb">87</td></tr>
-      <tr><td class="rank">11</td><td class="veh">Subaru Crosstrek</td><td><span class="tag t-suv">SUV</span></td><td class="num">$255</td><td class="num">$3,254</td><td class="num">36</td><td class="num">$28,500</td><td class="num">$345</td><td class="num lr-mid">1.21%</td><td class="bfb">83</td></tr>
-      <tr><td class="rank">12</td><td class="veh">Ford Mustang EcoBoost</td><td><span class="tag t-sport">SPORT</span></td><td class="num">$329</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$34,000</td><td class="num">$412</td><td class="num lr-mid">1.21%</td><td class="bfb">83</td></tr>
-      <tr><td class="rank">13</td><td class="veh">Volvo XC40</td><td><span class="tag t-lux">LUX SUV</span></td><td class="num">$430</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$42,000</td><td class="num">$513</td><td class="num lr-mid">1.22%</td><td class="bfb">82</td></tr>
-      <tr><td class="rank">14</td><td class="veh">Kia Sportage Hybrid</td><td><span class="tag t-suv">SUV</span></td><td class="num">$239</td><td class="num">$3,844</td><td class="num">24</td><td class="num">$32,000</td><td class="num">$399</td><td class="num lr-warn">1.25%</td><td class="bfb">80</td></tr>
-      <tr><td class="rank">15</td><td class="veh">Honda Odyssey EX-L</td><td><span class="tag t-van">VAN</span></td><td class="num">$429</td><td class="num">$3,999</td><td class="num">36</td><td class="num">$43,000</td><td class="num">$540</td><td class="num lr-warn">1.26%</td><td class="bfb">80</td></tr>
-      <tr><td class="rank">16</td><td class="veh">Kia Carnival EX</td><td><span class="tag t-van">VAN</span></td><td class="num">$379</td><td class="num">$3,999</td><td class="num">36</td><td class="num">$39,000</td><td class="num">$490</td><td class="num lr-warn">1.26%</td><td class="bfb">80</td></tr>
-      <tr><td class="rank">17</td><td class="veh">Genesis GV70 2.5T</td><td><span class="tag t-lux">LUX SUV</span></td><td class="num">$557</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$50,000</td><td class="num">$640</td><td class="num lr-warn">1.28%</td><td class="bfb">78</td></tr>
-      <tr><td class="rank">18</td><td class="veh">Toyota RAV4</td><td><span class="tag t-suv">SUV</span></td><td class="num">$299</td><td class="num">$3,999</td><td class="num">36</td><td class="num">$32,000</td><td class="num">$410</td><td class="num lr-warn">1.28%</td><td class="bfb">78</td></tr>
-      <tr><td class="rank">19</td><td class="veh">Chevrolet Blazer EV LT AWD</td><td><span class="tag t-ev">SUV·EV</span></td><td class="num">$509</td><td class="num">$4,659</td><td class="num">36</td><td class="num">$48,000</td><td class="num">$638</td><td class="num lr-warn">1.33%</td><td class="bfb">75</td></tr>
-      <tr><td class="rank">20</td><td class="veh">Acura MDX SH-AWD</td><td><span class="tag t-lux">LUX SUV</span></td><td class="num">$569</td><td class="num">$4,999</td><td class="num">36</td><td class="num">$52,000</td><td class="num">$708</td><td class="num lr-warn">1.36%</td><td class="bfb">74</td></tr>
+      <tr><td class="rank">1</td><td class="thumb"><img loading="lazy" alt="Mazda CX-70" src="https://cdn.imagin.studio/getimage?customer=img&make=mazda&modelFamily=cx-70&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/mazda/cx-70/lease/" target="_blank" rel="noopener">Mazda CX-70 Preferred</a></td><td><span class="tag t-suv">SUV</span></td><td class="num">$239</td><td class="num">$2,999*</td><td class="num">33</td><td class="num">$42,000</td><td class="num">$330</td><td class="num lr-good">0.79%</td><td class="bfb">127</td></tr>
+      <tr><td class="rank">2</td><td class="thumb"><img loading="lazy" alt="Nissan Pathfinder" src="https://cdn.imagin.studio/getimage?customer=img&make=nissan&modelFamily=pathfinder&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/nissan/pathfinder/lease/" target="_blank" rel="noopener">Nissan Pathfinder SV AWD</a></td><td><span class="tag t-suv">SUV</span></td><td class="num">$199</td><td class="num">$4,559</td><td class="num">36</td><td class="num">$39,500</td><td class="num">$326</td><td class="num lr-good">0.82%</td><td class="bfb">121</td></tr>
+      <tr><td class="rank">3</td><td class="thumb"><img loading="lazy" alt="Hyundai Tucson" src="https://cdn.imagin.studio/getimage?customer=img&make=hyundai&modelFamily=tucson&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/hyundai/tucson/lease/" target="_blank" rel="noopener">Hyundai Tucson SEL</a></td><td><span class="tag t-suv">SUV</span></td><td class="num">$249</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$31,000</td><td class="num">$332</td><td class="num lr-mid">1.07%</td><td class="bfb">93</td></tr>
+      <tr><td class="rank">4</td><td class="thumb"><img loading="lazy" alt="Ford Mustang GT" src="https://cdn.imagin.studio/getimage?customer=img&make=ford&modelFamily=mustang&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/ford/mustang/lease/" target="_blank" rel="noopener">Ford Mustang GT (V8)</a></td><td><span class="tag t-sport">SPORT</span></td><td class="num">$443</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$48,000</td><td class="num">$526</td><td class="num lr-mid">1.10%</td><td class="bfb">91</td></tr>
+      <tr><td class="rank">5</td><td class="thumb"><img loading="lazy" alt="Toyota Sienna" src="https://cdn.imagin.studio/getimage?customer=img&make=toyota&modelFamily=sienna&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/toyota/sienna/lease/" target="_blank" rel="noopener">Toyota Sienna LE Hybrid</a></td><td><span class="tag t-van">VAN</span></td><td class="num">$349</td><td class="num">$3,999</td><td class="num">36</td><td class="num">$40,000</td><td class="num">$460</td><td class="num lr-mid">1.15%</td><td class="bfb">87</td></tr>
+      <tr><td class="rank">6</td><td class="thumb"><img loading="lazy" alt="Chrysler Pacifica" src="https://cdn.imagin.studio/getimage?customer=img&make=chrysler&modelFamily=pacifica&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/chrysler/pacifica/lease/" target="_blank" rel="noopener">Chrysler Pacifica Select</a></td><td><span class="tag t-van">VAN</span></td><td class="num">$413</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$43,000</td><td class="num">$496</td><td class="num lr-mid">1.15%</td><td class="bfb">87</td></tr>
+      <tr><td class="rank">7</td><td class="thumb"><img loading="lazy" alt="Subaru Crosstrek" src="https://cdn.imagin.studio/getimage?customer=img&make=subaru&modelFamily=crosstrek&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/subaru/crosstrek/lease/" target="_blank" rel="noopener">Subaru Crosstrek</a></td><td><span class="tag t-suv">SUV</span></td><td class="num">$255</td><td class="num">$3,254</td><td class="num">36</td><td class="num">$28,500</td><td class="num">$345</td><td class="num lr-mid">1.21%</td><td class="bfb">83</td></tr>
+      <tr><td class="rank">8</td><td class="thumb"><img loading="lazy" alt="Ford Mustang EcoBoost" src="https://cdn.imagin.studio/getimage?customer=img&make=ford&modelFamily=mustang&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/ford/mustang/lease/" target="_blank" rel="noopener">Ford Mustang EcoBoost</a></td><td><span class="tag t-sport">SPORT</span></td><td class="num">$329</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$34,000</td><td class="num">$412</td><td class="num lr-mid">1.21%</td><td class="bfb">83</td></tr>
+      <tr><td class="rank">9</td><td class="thumb"><img loading="lazy" alt="Volvo XC40" src="https://cdn.imagin.studio/getimage?customer=img&make=volvo&modelFamily=xc40&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/volvo/xc40/lease/" target="_blank" rel="noopener">Volvo XC40</a></td><td><span class="tag t-lux">LUX SUV</span></td><td class="num">$430</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$42,000</td><td class="num">$513</td><td class="num lr-mid">1.22%</td><td class="bfb">82</td></tr>
+      <tr><td class="rank">10</td><td class="thumb"><img loading="lazy" alt="Kia Sportage Hybrid" src="https://cdn.imagin.studio/getimage?customer=img&make=kia&modelFamily=sportage&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/kia/sportage/lease/" target="_blank" rel="noopener">Kia Sportage Hybrid</a></td><td><span class="tag t-suv">SUV</span></td><td class="num">$239</td><td class="num">$3,844</td><td class="num">24</td><td class="num">$32,000</td><td class="num">$399</td><td class="num lr-warn">1.25%</td><td class="bfb">80</td></tr>
+      <tr><td class="rank">11</td><td class="thumb"><img loading="lazy" alt="Kia Carnival" src="https://cdn.imagin.studio/getimage?customer=img&make=kia&modelFamily=carnival&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/kia/carnival/lease/" target="_blank" rel="noopener">Kia Carnival EX</a></td><td><span class="tag t-van">VAN</span></td><td class="num">$379</td><td class="num">$3,999</td><td class="num">36</td><td class="num">$39,000</td><td class="num">$490</td><td class="num lr-warn">1.26%</td><td class="bfb">80</td></tr>
+      <tr><td class="rank">12</td><td class="thumb"><img loading="lazy" alt="Honda Odyssey" src="https://cdn.imagin.studio/getimage?customer=img&make=honda&modelFamily=odyssey&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/honda/odyssey/lease/" target="_blank" rel="noopener">Honda Odyssey EX-L</a></td><td><span class="tag t-van">VAN</span></td><td class="num">$429</td><td class="num">$3,999</td><td class="num">36</td><td class="num">$43,000</td><td class="num">$540</td><td class="num lr-warn">1.26%</td><td class="bfb">80</td></tr>
+      <tr><td class="rank">13</td><td class="thumb"><img loading="lazy" alt="Toyota RAV4 Hybrid" src="https://cdn.imagin.studio/getimage?customer=img&make=toyota&modelFamily=rav4&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/toyota/rav4/lease/" target="_blank" rel="noopener">Toyota RAV4 Hybrid</a></td><td><span class="tag t-suv">SUV</span></td><td class="num">$299</td><td class="num">$3,999</td><td class="num">36</td><td class="num">$32,000</td><td class="num">$410</td><td class="num lr-warn">1.28%</td><td class="bfb">78</td></tr>
+      <tr><td class="rank">14</td><td class="thumb"><img loading="lazy" alt="Genesis GV70" src="https://cdn.imagin.studio/getimage?customer=img&make=genesis&modelFamily=gv70&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/genesis/gv70/lease/" target="_blank" rel="noopener">Genesis GV70 2.5T</a></td><td><span class="tag t-lux">LUX SUV</span></td><td class="num">$557</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$50,000</td><td class="num">$640</td><td class="num lr-warn">1.28%</td><td class="bfb">78</td></tr>
+      <tr><td class="rank">15</td><td class="thumb"><img loading="lazy" alt="Acura MDX" src="https://cdn.imagin.studio/getimage?customer=img&make=acura&modelFamily=mdx&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/acura/mdx/lease/" target="_blank" rel="noopener">Acura MDX SH-AWD</a></td><td><span class="tag t-lux">LUX SUV</span></td><td class="num">$569</td><td class="num">$4,999</td><td class="num">36</td><td class="num">$52,000</td><td class="num">$708</td><td class="num lr-warn">1.36%</td><td class="bfb">74</td></tr>
+      <tr><td class="rank">16</td><td class="thumb"><img loading="lazy" alt="Subaru BRZ" src="https://cdn.imagin.studio/getimage?customer=img&make=subaru&modelFamily=brz&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/subaru/brz/lease/" target="_blank" rel="noopener">Subaru BRZ (RWD, manual)</a></td><td><span class="tag t-sport">SPORT</span></td><td class="num">$348</td><td class="num">$3,414</td><td class="num">36</td><td class="num">$31,000</td><td class="num">$443</td><td class="num lr-warn">1.43%</td><td class="bfb">70</td></tr>
+      <tr><td class="rank">17</td><td class="thumb"><img loading="lazy" alt="Dodge Charger" src="https://cdn.imagin.studio/getimage?customer=img&make=dodge&modelFamily=charger&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/dodge/charger/lease/" target="_blank" rel="noopener">Dodge Charger</a></td><td><span class="tag t-sport">SPORT</span></td><td class="num">$698</td><td class="num">$2,000</td><td class="num">36</td><td class="num">$51,990</td><td class="num">$754</td><td class="num lr-warn">1.45%</td><td class="bfb">69</td></tr>
+      <tr><td class="rank">18</td><td class="thumb"><img loading="lazy" alt="Subaru WRX" src="https://cdn.imagin.studio/getimage?customer=img&make=subaru&modelFamily=wrx&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/subaru/wrx/lease/" target="_blank" rel="noopener">Subaru WRX (AWD)</a></td><td><span class="tag t-sport">SPORT</span></td><td class="num">$473</td><td class="num">$2,000</td><td class="num">36</td><td class="num">$35,000</td><td class="num">$529</td><td class="num lr-warn">1.51%</td><td class="bfb">66</td></tr>
+      <tr><td class="rank">19</td><td class="thumb"><img loading="lazy" alt="BMW M240i" src="https://cdn.imagin.studio/getimage?customer=img&make=bmw&modelFamily=2-series&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/bmw/2-series/lease/" target="_blank" rel="noopener">BMW M240i (AWD)</a></td><td><span class="tag t-sport">SPORT</span></td><td class="num">$679</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$50,000</td><td class="num">$762</td><td class="num lr-warn">1.52%</td><td class="bfb">66</td></tr>
+      <tr><td class="rank">20</td><td class="thumb"><img loading="lazy" alt="Audi Q5" src="https://cdn.imagin.studio/getimage?customer=img&make=audi&modelFamily=q5&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/audi/q5/lease/" target="_blank" rel="noopener">Audi Q5</a></td><td><span class="tag t-lux">LUX SUV</span></td><td class="num">$639</td><td class="num">$2,999*</td><td class="num">36</td><td class="num">$47,000</td><td class="num">$722</td><td class="num lr-warn">1.54%</td><td class="bfb">65</td></tr>
     </tbody>
   </table>
   </div>
 </div>
 <div class="legend">
   <span><span class="tag t-suv">SUV</span> gas/hybrid</span>
-  <span><span class="tag t-ev">EV</span> electric</span>
   <span><span class="tag t-van">VAN</span> minivan</span>
   <span><span class="tag t-sport">SPORT</span> sports/coupe</span>
   <span><span class="tag t-lux">LUX</span> luxury SUV</span>
-  <span>· <strong>*</strong> = due-at-signing not published; standardized to $2,999 for comparison</span>
+  <span>· <strong>*</strong> = due-at-signing standardized to $2,999 for comparison</span>
 </div>
+<p class="tnote">Vehicle names link to live lease listings (TrueCar). Thumbnails are pulled from a public vehicle-image service and show a representative model; if one doesn't load, a 🚙 placeholder appears.</p>
 
 <h2>Ranked by absolute cost — lowest out-of-pocket</h2>
 <p>Bang-for-buck rewards expensive cars that lease cheaply <em>relative to sticker</em>. But if your real constraint is the monthly check, you want the lowest <strong>effective monthly cost</strong> regardless of how much car that buys. Here is the same field re-sorted that way — the 16 cheapest leases overall.</p>
 <div class="tablecard">
   <div class="scroll">
   <table>
-    <thead><tr><th>#</th><th>Vehicle</th><th>Type</th><th class="num">$/mo</th><th class="num">Due</th><th class="num">Eff. /mo ▲</th><th class="num">~MSRP</th><th class="num">BFB</th></tr></thead>
+    <thead><tr><th>#</th><th>Img</th><th>Vehicle</th><th>Type</th><th class="num">$/mo</th><th class="num">Due</th><th class="num">Eff. /mo ▲</th><th class="num">~MSRP</th><th class="num">BFB</th></tr></thead>
     <tbody>
-      <tr><td class="rank">1</td><td class="veh">Nissan Pathfinder SV AWD</td><td><span class="tag t-suv">SUV</span></td><td class="num">$199</td><td class="num">$4,559</td><td class="num">$326</td><td class="num">$39,500</td><td class="bfb">121</td></tr>
-      <tr><td class="rank">2</td><td class="veh">Mazda CX-70 Preferred</td><td><span class="tag t-suv">SUV</span></td><td class="num">$239</td><td class="num">$2,999*</td><td class="num">$330</td><td class="num">$42,000</td><td class="bfb">127</td></tr>
-      <tr><td class="rank">3</td><td class="veh">Hyundai Tucson SEL</td><td><span class="tag t-suv">SUV</span></td><td class="num">$249</td><td class="num">$2,999*</td><td class="num">$332</td><td class="num">$31,000</td><td class="bfb">93</td></tr>
-      <tr><td class="rank">4</td><td class="veh">Subaru Crosstrek</td><td><span class="tag t-suv">SUV</span></td><td class="num">$255</td><td class="num">$3,254</td><td class="num">$345</td><td class="num">$28,500</td><td class="bfb">83</td></tr>
-      <tr><td class="rank">5</td><td class="veh">Chevrolet Equinox EV LT</td><td><span class="tag t-ev">SUV·EV</span></td><td class="num">$279</td><td class="num">$2,999*</td><td class="num">$362</td><td class="num">$40,000</td><td class="bfb">110</td></tr>
-      <tr><td class="rank">6</td><td class="veh">Hyundai Ioniq 5</td><td><span class="tag t-ev">SUV·EV</span></td><td class="num">$340</td><td class="num">$2,000</td><td class="num">$396</td><td class="num">$46,000</td><td class="bfb">116</td></tr>
-      <tr><td class="rank">7</td><td class="veh">Kia Sportage Hybrid</td><td><span class="tag t-suv">SUV</span></td><td class="num">$239</td><td class="num">$3,844</td><td class="num">$399</td><td class="num">$32,000</td><td class="bfb">80</td></tr>
-      <tr><td class="rank">8</td><td class="veh">Honda Prologue</td><td><span class="tag t-ev">SUV·EV</span></td><td class="num">$350</td><td class="num">$2,000</td><td class="num">$406</td><td class="num">$50,000</td><td class="bfb">123</td></tr>
-      <tr><td class="rank">9</td><td class="veh">Toyota RAV4</td><td><span class="tag t-suv">SUV</span></td><td class="num">$299</td><td class="num">$3,999</td><td class="num">$410</td><td class="num">$32,000</td><td class="bfb">78</td></tr>
-      <tr><td class="rank">10</td><td class="veh">Ford Mustang EcoBoost</td><td><span class="tag t-sport">SPORT</span></td><td class="num">$329</td><td class="num">$2,999*</td><td class="num">$412</td><td class="num">$34,000</td><td class="bfb">83</td></tr>
-      <tr><td class="rank">11</td><td class="veh">Subaru BRZ</td><td><span class="tag t-sport">SPORT</span></td><td class="num">$348</td><td class="num">$3,414</td><td class="num">$443</td><td class="num">$31,000</td><td class="bfb">70</td></tr>
-      <tr><td class="rank">12</td><td class="veh">Toyota Sienna LE Hybrid</td><td><span class="tag t-van">VAN</span></td><td class="num">$349</td><td class="num">$3,999</td><td class="num">$460</td><td class="num">$40,000</td><td class="bfb">87</td></tr>
-      <tr><td class="rank">13</td><td class="veh">Kia EV6 Wind</td><td><span class="tag t-ev">SUV·EV</span></td><td class="num">$429</td><td class="num">$2,000</td><td class="num">$485</td><td class="num">$45,000</td><td class="bfb">93</td></tr>
-      <tr><td class="rank">14</td><td class="veh">Kia Carnival EX</td><td><span class="tag t-van">VAN</span></td><td class="num">$379</td><td class="num">$3,999</td><td class="num">$490</td><td class="num">$39,000</td><td class="bfb">80</td></tr>
-      <tr><td class="rank">15</td><td class="veh">Chrysler Pacifica Select</td><td><span class="tag t-van">VAN</span></td><td class="num">$413</td><td class="num">$2,999*</td><td class="num">$496</td><td class="num">$43,000</td><td class="bfb">87</td></tr>
-      <tr><td class="rank">16</td><td class="veh">Toyota GR86</td><td><span class="tag t-sport">SPORT</span></td><td class="num">$491</td><td class="num">$2,000</td><td class="num">$547</td><td class="num">$31,500</td><td class="bfb">58</td></tr>
+      <tr><td class="rank">1</td><td class="thumb"><img loading="lazy" alt="Nissan Pathfinder" src="https://cdn.imagin.studio/getimage?customer=img&make=nissan&modelFamily=pathfinder&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/nissan/pathfinder/lease/" target="_blank" rel="noopener">Nissan Pathfinder SV AWD</a></td><td><span class="tag t-suv">SUV</span></td><td class="num">$199</td><td class="num">$4,559</td><td class="num">$326</td><td class="num">$39,500</td><td class="bfb">121</td></tr>
+      <tr><td class="rank">2</td><td class="thumb"><img loading="lazy" alt="Mazda CX-70" src="https://cdn.imagin.studio/getimage?customer=img&make=mazda&modelFamily=cx-70&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/mazda/cx-70/lease/" target="_blank" rel="noopener">Mazda CX-70 Preferred</a></td><td><span class="tag t-suv">SUV</span></td><td class="num">$239</td><td class="num">$2,999*</td><td class="num">$330</td><td class="num">$42,000</td><td class="bfb">127</td></tr>
+      <tr><td class="rank">3</td><td class="thumb"><img loading="lazy" alt="Hyundai Tucson" src="https://cdn.imagin.studio/getimage?customer=img&make=hyundai&modelFamily=tucson&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/hyundai/tucson/lease/" target="_blank" rel="noopener">Hyundai Tucson SEL</a></td><td><span class="tag t-suv">SUV</span></td><td class="num">$249</td><td class="num">$2,999*</td><td class="num">$332</td><td class="num">$31,000</td><td class="bfb">93</td></tr>
+      <tr><td class="rank">4</td><td class="thumb"><img loading="lazy" alt="Subaru Crosstrek" src="https://cdn.imagin.studio/getimage?customer=img&make=subaru&modelFamily=crosstrek&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/subaru/crosstrek/lease/" target="_blank" rel="noopener">Subaru Crosstrek</a></td><td><span class="tag t-suv">SUV</span></td><td class="num">$255</td><td class="num">$3,254</td><td class="num">$345</td><td class="num">$28,500</td><td class="bfb">83</td></tr>
+      <tr><td class="rank">5</td><td class="thumb"><img loading="lazy" alt="Kia Sportage Hybrid" src="https://cdn.imagin.studio/getimage?customer=img&make=kia&modelFamily=sportage&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/kia/sportage/lease/" target="_blank" rel="noopener">Kia Sportage Hybrid</a></td><td><span class="tag t-suv">SUV</span></td><td class="num">$239</td><td class="num">$3,844</td><td class="num">$399</td><td class="num">$32,000</td><td class="bfb">80</td></tr>
+      <tr><td class="rank">6</td><td class="thumb"><img loading="lazy" alt="Toyota RAV4 Hybrid" src="https://cdn.imagin.studio/getimage?customer=img&make=toyota&modelFamily=rav4&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/toyota/rav4/lease/" target="_blank" rel="noopener">Toyota RAV4 Hybrid</a></td><td><span class="tag t-suv">SUV</span></td><td class="num">$299</td><td class="num">$3,999</td><td class="num">$410</td><td class="num">$32,000</td><td class="bfb">78</td></tr>
+      <tr><td class="rank">7</td><td class="thumb"><img loading="lazy" alt="Ford Mustang EcoBoost" src="https://cdn.imagin.studio/getimage?customer=img&make=ford&modelFamily=mustang&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/ford/mustang/lease/" target="_blank" rel="noopener">Ford Mustang EcoBoost</a></td><td><span class="tag t-sport">SPORT</span></td><td class="num">$329</td><td class="num">$2,999*</td><td class="num">$412</td><td class="num">$34,000</td><td class="bfb">83</td></tr>
+      <tr><td class="rank">8</td><td class="thumb"><img loading="lazy" alt="Subaru BRZ" src="https://cdn.imagin.studio/getimage?customer=img&make=subaru&modelFamily=brz&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/subaru/brz/lease/" target="_blank" rel="noopener">Subaru BRZ</a></td><td><span class="tag t-sport">SPORT</span></td><td class="num">$348</td><td class="num">$3,414</td><td class="num">$443</td><td class="num">$31,000</td><td class="bfb">70</td></tr>
+      <tr><td class="rank">9</td><td class="thumb"><img loading="lazy" alt="Toyota Sienna" src="https://cdn.imagin.studio/getimage?customer=img&make=toyota&modelFamily=sienna&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/toyota/sienna/lease/" target="_blank" rel="noopener">Toyota Sienna LE Hybrid</a></td><td><span class="tag t-van">VAN</span></td><td class="num">$349</td><td class="num">$3,999</td><td class="num">$460</td><td class="num">$40,000</td><td class="bfb">87</td></tr>
+      <tr><td class="rank">10</td><td class="thumb"><img loading="lazy" alt="Kia Carnival" src="https://cdn.imagin.studio/getimage?customer=img&make=kia&modelFamily=carnival&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/kia/carnival/lease/" target="_blank" rel="noopener">Kia Carnival EX</a></td><td><span class="tag t-van">VAN</span></td><td class="num">$379</td><td class="num">$3,999</td><td class="num">$490</td><td class="num">$39,000</td><td class="bfb">80</td></tr>
+      <tr><td class="rank">11</td><td class="thumb"><img loading="lazy" alt="Chrysler Pacifica" src="https://cdn.imagin.studio/getimage?customer=img&make=chrysler&modelFamily=pacifica&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/chrysler/pacifica/lease/" target="_blank" rel="noopener">Chrysler Pacifica Select</a></td><td><span class="tag t-van">VAN</span></td><td class="num">$413</td><td class="num">$2,999*</td><td class="num">$496</td><td class="num">$43,000</td><td class="bfb">87</td></tr>
+      <tr><td class="rank">12</td><td class="thumb"><img loading="lazy" alt="Volvo XC40" src="https://cdn.imagin.studio/getimage?customer=img&make=volvo&modelFamily=xc40&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/volvo/xc40/lease/" target="_blank" rel="noopener">Volvo XC40</a></td><td><span class="tag t-lux">LUX SUV</span></td><td class="num">$430</td><td class="num">$2,999*</td><td class="num">$513</td><td class="num">$42,000</td><td class="bfb">82</td></tr>
+      <tr><td class="rank">13</td><td class="thumb"><img loading="lazy" alt="Ford Mustang GT" src="https://cdn.imagin.studio/getimage?customer=img&make=ford&modelFamily=mustang&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/ford/mustang/lease/" target="_blank" rel="noopener">Ford Mustang GT (V8)</a></td><td><span class="tag t-sport">SPORT</span></td><td class="num">$443</td><td class="num">$2,999*</td><td class="num">$526</td><td class="num">$48,000</td><td class="bfb">91</td></tr>
+      <tr><td class="rank">14</td><td class="thumb"><img loading="lazy" alt="Subaru WRX" src="https://cdn.imagin.studio/getimage?customer=img&make=subaru&modelFamily=wrx&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/subaru/wrx/lease/" target="_blank" rel="noopener">Subaru WRX (AWD)</a></td><td><span class="tag t-sport">SPORT</span></td><td class="num">$473</td><td class="num">$2,000</td><td class="num">$529</td><td class="num">$35,000</td><td class="bfb">66</td></tr>
+      <tr><td class="rank">15</td><td class="thumb"><img loading="lazy" alt="Honda Odyssey" src="https://cdn.imagin.studio/getimage?customer=img&make=honda&modelFamily=odyssey&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/honda/odyssey/lease/" target="_blank" rel="noopener">Honda Odyssey EX-L</a></td><td><span class="tag t-van">VAN</span></td><td class="num">$429</td><td class="num">$3,999</td><td class="num">$540</td><td class="num">$43,000</td><td class="bfb">80</td></tr>
+      <tr><td class="rank">16</td><td class="thumb"><img loading="lazy" alt="Toyota GR86" src="https://cdn.imagin.studio/getimage?customer=img&make=toyota&modelFamily=gr86&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/toyota/gr86/lease/" target="_blank" rel="noopener">Toyota GR86</a></td><td><span class="tag t-sport">SPORT</span></td><td class="num">$491</td><td class="num">$2,000</td><td class="num">$547</td><td class="num">$31,500</td><td class="bfb">58</td></tr>
     </tbody>
   </table>
   </div>
 </div>
-<p style="color:var(--muted);font-size:.9rem">Note how the two lenses disagree: the Honda Prologue is the #2 value but only the #8 cheapest, while the Pathfinder tops absolute cost on a fat $4,559 drive-off. Pick the lens that matches your constraint — total value vs. monthly out-of-pocket.</p>
+<p style="color:var(--muted);font-size:.9rem">Note how the two lenses disagree: the Mustang GT is the #4 value but only the #13 cheapest, while the Pathfinder tops absolute cost on a fat $4,559 drive-off. Pick the lens that matches your constraint — total value vs. monthly out-of-pocket.</p>
 
 <h2>Money down — and when it's actually cheaper</h2>
-<p>You're right that putting money down can come out cheaper — but only in specific cases, and the rankings above are already built to see through it. Every score uses <strong>Effective Monthly Cost</strong>, which folds the drive-off back in, so a low payment propped up by a big down payment doesn't get an unfair edge.</p>
+<p>Putting money down can come out cheaper — but only in specific cases, and the rankings above are already built to see through it. Every score uses <strong>Effective Monthly Cost</strong>, which folds the drive-off back in, so a low payment propped up by a big down payment doesn't get an unfair edge.</p>
 
 <h3>The default case: it's a wash</h3>
 <p>On a 36-month lease, every <strong>$1,000 down lowers the payment by about $28/month</strong> ($1,000 ÷ 36), plus a sliver of money-factor savings. So most of the time you're <em>pre-paying</em>, not saving — the total cost barely moves. That's the neutral case.</p>
@@ -217,7 +218,7 @@
 </div>
 <p>The extra ~$2,000 down drops the payment by $66/mo — and $66 &times; 36 = $2,376 saved against $1,999 spent, a real <strong>~$377 net saving</strong>. The reduction outruns plain amortization, so here, more down is the better deal. <em>But it goes both ways:</em> the Toyota RAV4's Northeast <strong>$0-down</strong> special (~$399/mo) beats some of its own money-down structures in other regions. The lesson: <strong>always get the quote at $0-down and at the advertised money-down, then compare Effective Monthly Cost and pick the lower one.</strong></p>
 
-<div class="callout ev">
+<div class="callout good">
   <h3 style="margin-top:0">The real "money down" cheat code: Multiple Security Deposits (MSD)</h3>
   <p style="margin-top:.3rem">If you have cash to put down, a down payment is usually the <em>wrong</em> way to use it. <strong>MSDs</strong> are refundable deposits that lower your <strong>money factor</strong> (the lease's interest rate) instead of the cap cost — so you cut the monthly <em>and get the money back at lease-end</em>. Toyota, for example, lets you stack up to nine deposits, each shaving the money factor by 0.00008 (≈ a 1.7% rate cut), for a typical <strong>$300–$3,000 total saving</strong>. <strong>BMW, Audi, Lexus, Mercedes, Toyota, Volvo, and Nissan</strong> all support MSD programs. Same lower payment as a down payment, but refundable and safe.</p>
 </div>
@@ -227,51 +228,68 @@
   <p style="margin-top:.3rem">If the car is <strong>totaled or stolen early</strong>, your down payment is gone. Gap insurance pays the <em>lender</em> the remaining lease balance — it does <strong>not</strong> refund your cap-cost reduction. BMW won't cut you a check if it happens in month three. MSDs, by contrast, are refundable even after a total loss. So: don't pile cash down just to hit a monthly target — you're not really saving, and you're taking on loss risk. Use MSDs if the brand offers them; otherwise keep the drive-off low.</p>
 </div>
 
-<h2 id="fast">Fast cars &amp; Corvette — gas only, no EV</h2>
-<p>This is the section for you: every performance car here runs on gasoline (no home charging needed) and is screened against your <strong>4-seat requirement</strong>. It's ranked by bang-for-buck, but the <strong>Eff. /mo</strong> column is the one that bites — performance cars are the worst-leasing segment because they hold value (high residual) yet carry almost no manufacturer lease cash. The Mustang is the lone exception.</p>
-<div class="callout warn">
-  <strong>Heads up — your two requirements collide on the Corvette.</strong> The Chevrolet Corvette Stingray is a strict <strong>two-seater</strong>, so it fails your 4-seat rule. The <strong>Toyota GR Supra</strong> and <strong>Nissan Z</strong> are 2-seaters too. They're greyed out below and dropped from the recommendations. If 4 seats is firm, the realistic "fast Corvette feeling with a back seat" is the V8 Mustang GT or a Dark Horse.
-</div>
+<h2 id="fast">Fast cars — gas, 4 seats</h2>
+<p>This is the section for the performance shopper: every car here runs on gasoline (no home charging needed) and seats at least four. It's ranked by bang-for-buck, but the <strong>Eff. /mo</strong> column is the one that bites — performance cars are the worst-leasing segment because they hold value (high residual) yet carry almost no manufacturer lease cash. The Mustang is the lone exception.</p>
 <div class="tablecard">
   <div class="scroll">
   <table>
-    <thead><tr><th>#</th><th>Vehicle</th><th class="num">hp*</th><th class="num">Seats</th><th class="num">$/mo</th><th class="num">Due</th><th class="num">~MSRP</th><th class="num">Eff. /mo</th><th class="num">Lease Ratio</th><th class="num">BFB</th></tr></thead>
+    <thead><tr><th>#</th><th>Img</th><th>Vehicle</th><th class="num">hp*</th><th class="num">Seats</th><th class="num">$/mo</th><th class="num">Due</th><th class="num">~MSRP</th><th class="num">Eff. /mo</th><th class="num">Lease Ratio</th><th class="num">BFB</th></tr></thead>
     <tbody>
-      <tr><td class="rank">1</td><td class="veh">Ford Mustang GT (V8)</td><td class="num">480</td><td class="num"><span class="ok2">4</span></td><td class="num">$443</td><td class="num">$2,999*</td><td class="num">$48,000</td><td class="num">$526</td><td class="num lr-mid">1.10%</td><td class="bfb">91</td></tr>
-      <tr><td class="rank">2</td><td class="veh">Ford Mustang EcoBoost</td><td class="num">315</td><td class="num"><span class="ok2">4</span></td><td class="num">$329</td><td class="num">$2,999*</td><td class="num">$34,000</td><td class="num">$412</td><td class="num lr-mid">1.21%</td><td class="bfb">83</td></tr>
-      <tr><td class="rank">3</td><td class="veh">Subaru BRZ (RWD, manual)</td><td class="num">228</td><td class="num"><span class="ok2">4</span>†</td><td class="num">$348</td><td class="num">$3,414</td><td class="num">$31,000</td><td class="num">$443</td><td class="num lr-warn">1.43%</td><td class="bfb">70</td></tr>
-      <tr><td class="rank">4</td><td class="veh">Dodge Charger</td><td class="num">550+</td><td class="num"><span class="ok2">5</span></td><td class="num">$698</td><td class="num">$2,000</td><td class="num">$51,990</td><td class="num">$754</td><td class="num lr-warn">1.45%</td><td class="bfb">69</td></tr>
-      <tr><td class="rank">5</td><td class="veh">BMW M240i (AWD)</td><td class="num">382</td><td class="num"><span class="ok2">4</span></td><td class="num">$679</td><td class="num">$2,999*</td><td class="num">$50,000</td><td class="num">$762</td><td class="num lr-warn">1.52%</td><td class="bfb">66</td></tr>
-      <tr><td class="rank">6</td><td class="veh">Subaru WRX (AWD)</td><td class="num">271</td><td class="num"><span class="ok2">5</span></td><td class="num">$473</td><td class="num">$2,000</td><td class="num">$35,000</td><td class="num">$529</td><td class="num lr-warn">1.51%</td><td class="bfb">66</td></tr>
-      <tr class="excl"><td class="rank">—</td><td class="veh">Toyota GR Supra 3.0</td><td class="num">382</td><td class="num"><span class="xmark">2 ✕</span></td><td class="num">$850</td><td class="num">$2,000</td><td class="num">$57,000</td><td class="num">$906</td><td class="num">1.59%</td><td class="bfb">63</td></tr>
-      <tr class="excl"><td class="rank">—</td><td class="veh">Chevrolet Corvette Stingray 1LT</td><td class="num">495</td><td class="num"><span class="xmark">2 ✕</span></td><td class="num">$1,109</td><td class="num">$2,000</td><td class="num">$72,495</td><td class="num">$1,165</td><td class="num">1.61%</td><td class="bfb">62</td></tr>
-      <tr><td class="rank">7</td><td class="veh">Toyota GR Corolla (AWD)</td><td class="num">300</td><td class="num"><span class="ok2">5</span></td><td class="num">$591</td><td class="num">$2,000</td><td class="num">$40,000</td><td class="num">$647</td><td class="num lr-warn">1.62%</td><td class="bfb">62</td></tr>
-      <tr><td class="rank">8</td><td class="veh">Ford Mustang Dark Horse</td><td class="num">500</td><td class="num"><span class="ok2">4</span></td><td class="num">$863</td><td class="num">$7,471</td><td class="num">$66,000</td><td class="num">$1,071</td><td class="num lr-warn">1.62%</td><td class="bfb">61</td></tr>
-      <tr><td class="rank">9</td><td class="veh">Audi S5</td><td class="num">362</td><td class="num"><span class="ok2">5</span></td><td class="num">$931</td><td class="num">$2,000</td><td class="num">$60,000</td><td class="num">$987</td><td class="num lr-warn">1.64%</td><td class="bfb">61</td></tr>
-      <tr><td class="rank">10</td><td class="veh">Toyota GR86</td><td class="num">228</td><td class="num"><span class="ok2">4</span>†</td><td class="num">$491</td><td class="num">$2,000</td><td class="num">$31,500</td><td class="num">$547</td><td class="num lr-warn">1.74%</td><td class="bfb">58</td></tr>
-      <tr><td class="rank">11</td><td class="veh">Honda Civic Type R</td><td class="num">315</td><td class="num"><span class="ok2">5</span></td><td class="num">$745</td><td class="num">$2,999*</td><td class="num">$47,000</td><td class="num">$828</td><td class="num lr-warn">1.76%</td><td class="bfb">57</td></tr>
-      <tr class="excl"><td class="rank">—</td><td class="veh">Nissan Z</td><td class="num">400</td><td class="num"><span class="xmark">2 ✕</span></td><td class="num">$735</td><td class="num">$2,000</td><td class="num">$43,000</td><td class="num">$791</td><td class="num">1.84%</td><td class="bfb">54</td></tr>
-      <tr><td class="rank">12</td><td class="veh">Cadillac CT5-V</td><td class="num">360</td><td class="num"><span class="ok2">5</span></td><td class="num">$1,083</td><td class="num">$2,000</td><td class="num">$58,000</td><td class="num">$1,138</td><td class="num lr-warn">1.96%</td><td class="bfb">51</td></tr>
+      <tr><td class="rank">1</td><td class="thumb"><img loading="lazy" alt="Ford Mustang GT" src="https://cdn.imagin.studio/getimage?customer=img&make=ford&modelFamily=mustang&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/ford/mustang/lease/" target="_blank" rel="noopener">Ford Mustang GT (V8)</a></td><td class="num">480</td><td class="num"><span class="ok2">4</span></td><td class="num">$443</td><td class="num">$2,999*</td><td class="num">$48,000</td><td class="num">$526</td><td class="num lr-mid">1.10%</td><td class="bfb">91</td></tr>
+      <tr><td class="rank">2</td><td class="thumb"><img loading="lazy" alt="Ford Mustang EcoBoost" src="https://cdn.imagin.studio/getimage?customer=img&make=ford&modelFamily=mustang&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/ford/mustang/lease/" target="_blank" rel="noopener">Ford Mustang EcoBoost</a></td><td class="num">315</td><td class="num"><span class="ok2">4</span></td><td class="num">$329</td><td class="num">$2,999*</td><td class="num">$34,000</td><td class="num">$412</td><td class="num lr-mid">1.21%</td><td class="bfb">83</td></tr>
+      <tr><td class="rank">3</td><td class="thumb"><img loading="lazy" alt="Subaru BRZ" src="https://cdn.imagin.studio/getimage?customer=img&make=subaru&modelFamily=brz&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/subaru/brz/lease/" target="_blank" rel="noopener">Subaru BRZ (RWD, manual)</a></td><td class="num">228</td><td class="num"><span class="ok2">4</span>†</td><td class="num">$348</td><td class="num">$3,414</td><td class="num">$31,000</td><td class="num">$443</td><td class="num lr-warn">1.43%</td><td class="bfb">70</td></tr>
+      <tr><td class="rank">4</td><td class="thumb"><img loading="lazy" alt="Dodge Charger" src="https://cdn.imagin.studio/getimage?customer=img&make=dodge&modelFamily=charger&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/dodge/charger/lease/" target="_blank" rel="noopener">Dodge Charger</a></td><td class="num">550+</td><td class="num"><span class="ok2">5</span></td><td class="num">$698</td><td class="num">$2,000</td><td class="num">$51,990</td><td class="num">$754</td><td class="num lr-warn">1.45%</td><td class="bfb">69</td></tr>
+      <tr><td class="rank">5</td><td class="thumb"><img loading="lazy" alt="Subaru WRX" src="https://cdn.imagin.studio/getimage?customer=img&make=subaru&modelFamily=wrx&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/subaru/wrx/lease/" target="_blank" rel="noopener">Subaru WRX (AWD)</a></td><td class="num">271</td><td class="num"><span class="ok2">5</span></td><td class="num">$473</td><td class="num">$2,000</td><td class="num">$35,000</td><td class="num">$529</td><td class="num lr-warn">1.51%</td><td class="bfb">66</td></tr>
+      <tr><td class="rank">6</td><td class="thumb"><img loading="lazy" alt="BMW M240i" src="https://cdn.imagin.studio/getimage?customer=img&make=bmw&modelFamily=2-series&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/bmw/2-series/lease/" target="_blank" rel="noopener">BMW M240i (AWD)</a></td><td class="num">382</td><td class="num"><span class="ok2">4</span></td><td class="num">$679</td><td class="num">$2,999*</td><td class="num">$50,000</td><td class="num">$762</td><td class="num lr-warn">1.52%</td><td class="bfb">66</td></tr>
+      <tr><td class="rank">7</td><td class="thumb"><img loading="lazy" alt="Toyota GR Corolla" src="https://cdn.imagin.studio/getimage?customer=img&make=toyota&modelFamily=corolla&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/toyota/gr-corolla/lease/" target="_blank" rel="noopener">Toyota GR Corolla (AWD)</a></td><td class="num">300</td><td class="num"><span class="ok2">5</span></td><td class="num">$591</td><td class="num">$2,000</td><td class="num">$40,000</td><td class="num">$647</td><td class="num lr-warn">1.62%</td><td class="bfb">62</td></tr>
+      <tr><td class="rank">8</td><td class="thumb"><img loading="lazy" alt="Audi S5" src="https://cdn.imagin.studio/getimage?customer=img&make=audi&modelFamily=s5&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/audi/s5/lease/" target="_blank" rel="noopener">Audi S5</a></td><td class="num">362</td><td class="num"><span class="ok2">5</span></td><td class="num">$931</td><td class="num">$2,000</td><td class="num">$60,000</td><td class="num">$987</td><td class="num lr-warn">1.64%</td><td class="bfb">61</td></tr>
+      <tr><td class="rank">9</td><td class="thumb"><img loading="lazy" alt="Ford Mustang Dark Horse" src="https://cdn.imagin.studio/getimage?customer=img&make=ford&modelFamily=mustang&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/ford/mustang/lease/" target="_blank" rel="noopener">Ford Mustang Dark Horse</a></td><td class="num">500</td><td class="num"><span class="ok2">4</span></td><td class="num">$863</td><td class="num">$7,471</td><td class="num">$66,000</td><td class="num">$1,071</td><td class="num lr-warn">1.62%</td><td class="bfb">61</td></tr>
+      <tr><td class="rank">10</td><td class="thumb"><img loading="lazy" alt="Toyota GR86" src="https://cdn.imagin.studio/getimage?customer=img&make=toyota&modelFamily=gr86&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/toyota/gr86/lease/" target="_blank" rel="noopener">Toyota GR86</a></td><td class="num">228</td><td class="num"><span class="ok2">4</span>†</td><td class="num">$491</td><td class="num">$2,000</td><td class="num">$31,500</td><td class="num">$547</td><td class="num lr-warn">1.74%</td><td class="bfb">58</td></tr>
+      <tr><td class="rank">11</td><td class="thumb"><img loading="lazy" alt="Honda Civic Type R" src="https://cdn.imagin.studio/getimage?customer=img&make=honda&modelFamily=civic&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/honda/civic/lease/" target="_blank" rel="noopener">Honda Civic Type R</a></td><td class="num">315</td><td class="num"><span class="ok2">5</span></td><td class="num">$745</td><td class="num">$2,999*</td><td class="num">$47,000</td><td class="num">$828</td><td class="num lr-warn">1.76%</td><td class="bfb">57</td></tr>
+      <tr><td class="rank">12</td><td class="thumb"><img loading="lazy" alt="Cadillac CT5-V" src="https://cdn.imagin.studio/getimage?customer=img&make=cadillac&modelFamily=ct5&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/cadillac/ct5-v/lease/" target="_blank" rel="noopener">Cadillac CT5-V</a></td><td class="num">360</td><td class="num"><span class="ok2">5</span></td><td class="num">$1,083</td><td class="num">$2,000</td><td class="num">$58,000</td><td class="num">$1,138</td><td class="num lr-warn">1.96%</td><td class="bfb">51</td></tr>
     </tbody>
   </table>
   </div>
 </div>
-<p style="color:var(--muted);font-size:.85rem">*Horsepower is approximate, for the configured trim — used only for context, not in the scoring. &nbsp;† BRZ/GR86 are 2+2: four seats, but the rears are vestigial (fine for cargo or small kids, tight for adults). Greyed rows are 2-seaters that fail the 4-seat requirement; rank numbers reflect only the qualifying cars.</p>
-
-<div class="callout warn" style="border-left-color:var(--sport)">
-  <h3 style="margin-top:0">About the Corvette — it doesn't meet your 4-seat rule</h3>
-  <p style="margin-top:.3rem">The Corvette Stingray is a <strong>two-seater</strong>, so with a firm 4-seat requirement it's out — no configuration adds a back seat. For the record on the lease itself: it runs a reasonable ~1.6% ratio (its strong resale props up the residual), but ~<strong>$1,165/mo effective</strong> in absolute terms, since GM rarely discounts it. If the 4-seat rule ever softens and the Corvette is genuinely <em>the</em> car, finance rather than lease it — Corvettes hold value, so buying wins past ~3 years. Otherwise, the closest 4-seat substitute for that V8 thrill is the Mustang GT or Dark Horse below.</p>
-</div>
+<p style="color:var(--muted);font-size:.85rem">*Horsepower is approximate, for the configured trim — used only for context, not in the scoring. &nbsp;† BRZ/GR86 are 2+2: four seats, but the rears are vestigial (fine for cargo or small kids, tight for adults).</p>
 
 <div class="callout">
-  <h3 style="margin-top:0">My picks — gas, fast, <em>and</em> 4 seats</h3>
+  <h3 style="margin-top:0">Picks for a fast, gas, 4-seat lease</h3>
   <ul style="margin-bottom:0">
-    <li><strong>Best value + real muscle → Ford Mustang GT.</strong> A 480-hp V8, 4 seats, leasing at a 1.10% ratio (~$526/mo effective) — the only performance car that leases like a sensible SUV, because Ford actively subsidizes it. The runaway winner, and your most Corvette-like option that keeps a back seat.</li>
+    <li><strong>Best value + real muscle → Ford Mustang GT.</strong> A 480-hp V8, 4 seats, leasing at a 1.10% ratio (~$526/mo effective) — the only performance car that leases like a sensible SUV, because Ford actively subsidizes it. The runaway winner.</li>
     <li><strong>Cheapest way into a true sports car → Subaru BRZ</strong> (~$443/mo effective). Rear-drive, manual, and a 2+2 — four seats, though the rears are token. Currently a better promo than its identical-twin GR86.</li>
     <li><strong>Speed-per-dollar sweet spot → BMW M240i</strong> (382 hp AWD, proper 4 seats) or <strong>Subaru WRX</strong> (271 hp AWD, roomy 5 seats) for ~$529/mo.</li>
     <li><strong>Most power with a usable back seat → Dodge Charger</strong> (550+ hp, 5 seats) if you want straight-line muscle and don't mind ~$754/mo effective.</li>
-    <li><strong>Ruled out by 4 seats → Corvette, GR Supra, Nissan Z</strong> (all 2-seaters). <strong>Worst value among the qualifiers → Cadillac CT5-V and Civic Type R</strong> — little lease support, so finance instead.</li>
+    <li><strong>Worst value → Cadillac CT5-V and Civic Type R</strong> — little lease support, so financing is markedly cheaper.</li>
   </ul>
+</div>
+
+<h2 id="fullsize">Full-size SUVs &amp; vans — the big haulers</h2>
+<p>A special section for the largest body-on-frame three-row SUVs — the eight-seat, tow-anything haulers. They sit in their own tier because they're all $60k–$95k trucks: monthly payments run high, but because the stickers are so large, a couple of them post <em>surprisingly strong</em> bang-for-buck. Every one below is gas or hybrid and seats 7–8.</p>
+<div class="tablecard">
+  <div class="scroll">
+  <table>
+    <thead><tr><th>#</th><th>Img</th><th>Vehicle</th><th class="num">Seats</th><th class="num">$/mo</th><th class="num">Due</th><th class="num">~MSRP</th><th class="num">Eff. /mo</th><th class="num">Lease Ratio</th><th class="num">BFB</th></tr></thead>
+    <tbody>
+      <tr><td class="rank">1</td><td class="thumb"><img loading="lazy" alt="Jeep Grand Wagoneer" src="https://cdn.imagin.studio/getimage?customer=img&make=jeep&modelFamily=grand-wagoneer&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/jeep/grand-wagoneer/lease/" target="_blank" rel="noopener">Jeep Grand Wagoneer</a></td><td class="num"><span class="ok2">8</span></td><td class="num">$839</td><td class="num">$4,999</td><td class="num">$92,000</td><td class="num">$978</td><td class="num lr-mid">1.06%</td><td class="bfb">94</td></tr>
+      <tr><td class="rank">2</td><td class="thumb"><img loading="lazy" alt="GMC Yukon" src="https://cdn.imagin.studio/getimage?customer=img&make=gmc&modelFamily=yukon&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/gmc/yukon/lease/" target="_blank" rel="noopener">GMC Yukon</a></td><td class="num"><span class="ok2">8</span></td><td class="num">$899</td><td class="num">$2,999*</td><td class="num">$75,000</td><td class="num">$982</td><td class="num lr-warn">1.31%</td><td class="bfb">76</td></tr>
+      <tr><td class="rank">3</td><td class="thumb"><img loading="lazy" alt="Toyota Sequoia" src="https://cdn.imagin.studio/getimage?customer=img&make=toyota&modelFamily=sequoia&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/toyota/sequoia/lease/" target="_blank" rel="noopener">Toyota Sequoia SR5 Hybrid</a></td><td class="num"><span class="ok2">8</span></td><td class="num">$769</td><td class="num">$3,999</td><td class="num">$66,000</td><td class="num">$880</td><td class="num lr-warn">1.33%</td><td class="bfb">75</td></tr>
+      <tr><td class="rank">4</td><td class="thumb"><img loading="lazy" alt="Chevrolet Tahoe" src="https://cdn.imagin.studio/getimage?customer=img&make=chevrolet&modelFamily=tahoe&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/chevrolet/tahoe/lease/" target="_blank" rel="noopener">Chevrolet Tahoe</a></td><td class="num"><span class="ok2">8</span></td><td class="num">$952</td><td class="num">$2,999*</td><td class="num">$68,000</td><td class="num">$1,035</td><td class="num lr-warn">1.52%</td><td class="bfb">66</td></tr>
+      <tr><td class="rank">5</td><td class="thumb"><img loading="lazy" alt="Chevrolet Suburban" src="https://cdn.imagin.studio/getimage?customer=img&make=chevrolet&modelFamily=suburban&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/chevrolet/suburban/lease/" target="_blank" rel="noopener">Chevrolet Suburban</a></td><td class="num"><span class="ok2">8</span></td><td class="num">$997</td><td class="num">$2,999*</td><td class="num">$70,000</td><td class="num">$1,080</td><td class="num lr-warn">1.54%</td><td class="bfb">65</td></tr>
+      <tr><td class="rank">6</td><td class="thumb"><img loading="lazy" alt="Nissan Armada" src="https://cdn.imagin.studio/getimage?customer=img&make=nissan&modelFamily=armada&angle=23&width=200" onerror="this.parentNode.classList.add('noimg');this.remove()"></td><td class="veh"><a href="https://www.truecar.com/nissan/armada/lease/" target="_blank" rel="noopener">Nissan Armada SV AWD</a></td><td class="num"><span class="ok2">8</span></td><td class="num">$809</td><td class="num">$7,349</td><td class="num">$60,000</td><td class="num">$1,013</td><td class="num lr-warn">1.69%</td><td class="bfb">59</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+<div class="callout">
+  <ul style="margin:0">
+    <li><strong>Bang-for-buck king → Jeep Grand Wagoneer.</strong> Its ~$92k sticker and heavy lease support give it a 1.06% ratio — it would rank near the top of the main list. You're driving $94 of truck per dollar of monthly cost.</li>
+    <li><strong>Cheapest to run → Toyota Sequoia SR5 Hybrid</strong> (~$880/mo effective) — the lowest out-of-pocket full-sizer, and its hybrid V6 sips far less fuel than the V8s here.</li>
+    <li><strong>Watch the drive-off → Nissan Armada.</strong> The $809/mo headline hides a steep $7,349 due at signing, which drags its effective cost above the Tahoe and Sequoia. Negotiate that down.</li>
+  </ul>
+</div>
+<div class="callout warn">
+  <p style="margin:0"><strong>A note on "full-size vans":</strong> true full-size <em>passenger vans</em> (Ford Transit, Chevy Express, Ram ProMaster) are sold as commercial vehicles and effectively aren't offered with consumer lease specials — so they're not rankable here. The largest van you can actually lease as a family vehicle is a <strong>minivan</strong> (Sienna, Pacifica, Carnival, Odyssey), all covered in the main list above.</p>
 </div>
 
 <h2>Read on the "3–6 year" term</h2>
@@ -286,19 +304,21 @@
 
 <h2>Takeaways for a Massachusetts shopper</h2>
 <ul>
-  <li><strong>Want maximum value?</strong> Lease an electric or hybrid SUV on a 36-month term and let the MOR-EV rebate + manufacturer lease cash do the work — that's why the Prologue, Ioniq 5 and Equinox EV sit near the top.</li>
-  <li><strong>Want value without going electric?</strong> The Mazda CX-70, Nissan Pathfinder, and Hyundai Tucson are the strongest gas picks.</li>
+  <li><strong>Want maximum value?</strong> The Mazda CX-70, Nissan Pathfinder, and Hyundai Tucson are the strongest gas SUV picks — all lease at or near the 1% rule.</li>
   <li><strong>Need a van?</strong> The Toyota Sienna LE Hybrid is the clear minivan value leader; Pacifica is close behind.</li>
-  <li><strong>Want a sports car?</strong> The Ford Mustang GT is the only one that leases like a sensible car. Everything else (Supra, Z, GR86, BRZ, Charger) is far cheaper to buy than to lease — these are cars you finance, not lease.</li>
-  <li><strong>Always negotiate the drive-off down.</strong> Many advertised specials let you pay only "first month + fees." Lowering the cash due at signing improves your real lease ratio directly.</li>
+  <li><strong>Need a big three-row hauler?</strong> The Jeep Grand Wagoneer is the bang-for-buck pick; the Toyota Sequoia Hybrid is the cheapest to run.</li>
+  <li><strong>Want a fast car?</strong> The Ford Mustang GT is the only performance car that leases like a sensible vehicle — a 480-hp V8 at a 1.10% ratio. Everything else (BRZ, WRX, M240i, Charger, Type R) leases worse.</li>
+  <li><strong>Always negotiate the drive-off down.</strong> Many advertised specials let you pay only "first month + fees." Lowering the cash due at signing improves your real lease ratio directly — and if you want to put cash in, use refundable Multiple Security Deposits instead.</li>
 </ul>
 
-<h2>Method, assumptions & caveats</h2>
+<h2>Method, assumptions &amp; caveats</h2>
 <ul>
+  <li>Scope is restricted to <strong>gasoline and conventional-hybrid</strong> vehicles with <strong>at least four seats</strong> — plug-in battery-electric models and two-seaters are excluded.</li>
   <li>Payments are advertised June 2026 specials for the Northeast region for well-qualified credit (≈ 700+). Actual MA dealer quotes vary by ZIP, inventory, trim, and credit tier.</li>
   <li>MSRP figures are approximate, tied to the trim each advertised payment targets, and used only to compute the ratio — verify the exact configured MSRP before signing.</li>
   <li>Where a payment was published without a due-at-signing figure, the drive-off was standardized to <strong>$2,999</strong> (marked <strong>*</strong>) so every row is comparable; a different real drive-off shifts that row's score.</li>
   <li>Effective Monthly Cost excludes state/local taxes, title, doc, and acquisition fees, which are similar across vehicles and don't change the ranking materially.</li>
+  <li><strong>Vehicle names link to live lease listings</strong> for current pricing; <strong>thumbnails</strong> are generic studio renders from a public vehicle-image service and may not reflect the exact trim/year.</li>
   <li>This is decision-support, not a quote. Lease programs reset monthly — re-check before shopping.</li>
 </ul>
 
@@ -309,15 +329,12 @@
     <li><a href="https://cars.usnews.com/cars-trucks/advice/best-suv-lease-deals">U.S. News — Best SUV Lease Deals, June 2026</a></li>
     <li><a href="https://www.edmunds.com/lease-deals/massachusetts/">Edmunds — Best Lease Deals in Massachusetts, June 2026</a></li>
     <li><a href="https://www.edmunds.com/best-minivan-lease-deals/">Edmunds — Best Minivan Lease Deals</a> · <a href="https://www.autoblog.com/carbuying/2026-toyota-sienna-lease-deals-june">Autoblog — Toyota Sienna June offer</a></li>
-    <li><a href="https://www.truecar.com/deals/coupes/">TrueCar — Coupe / Sports Car Deals, June 2026</a> · <a href="https://www.truecar.com/toyota/gr-supra/lease/">GR Supra</a> · <a href="https://www.truecar.com/nissan/z/lease/">Nissan Z</a></li>
-    <li><a href="https://www.truecar.com/chevrolet/corvette/lease/">TrueCar — Corvette lease</a> · <a href="https://www.carsdirect.com/chevrolet/corvette/prices-deals">CarsDirect — Corvette prices &amp; deals</a> · <a href="https://gmauthority.com/blog/2026/04/chevy-corvette-discount-lease-finance-deals-incentives-offers-april-2026/">GM Authority — Corvette incentives</a></li>
-    <li><a href="https://www.truecar.com/bmw/2-series/lease/">BMW M240i</a> · <a href="https://www.truecar.com/audi/s5/lease/">Audi S5</a> · <a href="https://www.truecar.com/cadillac/ct5-v/lease/">Cadillac CT5-V</a> · <a href="https://www.truecar.com/subaru/wrx/lease/">Subaru WRX</a> · <a href="https://www.truecar.com/toyota/gr-corolla/lease/">GR Corolla</a> · <a href="https://www.edmunds.com/ford-mustang-lease-deals/">Ford Mustang (incl. Dark Horse)</a></li>
-    <li><a href="https://www.carsdirect.com/deals-articles/best-green-car-deals">CarsDirect — Best EV Lease Deals, June 2026</a> · <a href="https://insideevs.com/features/410039/best-electric-car-deals-this-month/">InsideEVs — Best EV Deals</a></li>
+    <li><a href="https://www.truecar.com/deals/coupes/">TrueCar — Coupe / Sports Car Deals, June 2026</a> · <a href="https://www.edmunds.com/ford-mustang-lease-deals/">Ford Mustang (incl. Dark Horse)</a></li>
+    <li>Full-size SUVs: <a href="https://gmauthority.com/blog/2026/06/chevy-tahoe-discount-lease-finance-deals-for-june-2026/">Chevy Tahoe</a> · <a href="https://gmauthority.com/blog/2026/06/gmc-yukon-discount-lease-finance-deals-incentives-offers-june-2026/">GMC Yukon</a> · <a href="https://www.truecar.com/toyota/sequoia/lease/">Toyota Sequoia</a> · <a href="https://www.truecar.com/jeep/grand-wagoneer/lease/">Jeep Grand Wagoneer</a> · <a href="https://www.carsdirect.com/nissan/armada/prices-deals">Nissan Armada</a></li>
     <li><a href="https://cars.usnews.com/cars-trucks/advice/luxury-suv-lease-deals">U.S. News — Luxury SUV Lease Deals, June 2026</a></li>
-    <li><a href="https://www.leaseguide.com/lease08/">LeaseGuide — Lease payment formula</a> · <a href="https://mor-ev.org/">Massachusetts MOR-EV rebate program</a></li>
-    <li><a href="https://www.carsdirect.com/deals-articles/using-multiple-security-deposits-to-get-a-cheaper-lease">CarsDirect — Multiple Security Deposits</a> · <a href="https://www.autocompanion.com/article/93497fe5-2b43-457a-b0a4-e9a732d530d3">AutoCompanion — How MSDs work</a> · <a href="https://www.carsdirect.com/deals-articles/2026-toyota-rav4-0-down-lease-deal-is-pretty-good">CarsDirect — RAV4 $0-down vs money-down</a></li>
+    <li><a href="https://www.leaseguide.com/lease08/">LeaseGuide — Lease payment formula</a> · <a href="https://www.carsdirect.com/deals-articles/using-multiple-security-deposits-to-get-a-cheaper-lease">CarsDirect — Multiple Security Deposits</a> · <a href="https://www.carsdirect.com/deals-articles/2026-toyota-rav4-0-down-lease-deal-is-pretty-good">CarsDirect — RAV4 $0-down vs money-down</a></li>
   </ul>
-  <p style="margin-top:1rem;">Built June 24, 2026 · Figures are estimates for comparison only — confirm with a local dealer before signing.</p>
+  <p style="margin-top:1rem;">Built June 24, 2026 · Gas &amp; hybrid only, 4-seat minimum · Figures are estimates for comparison only — confirm with a local dealer before signing.</p>
 </footer>
 
 </div>
