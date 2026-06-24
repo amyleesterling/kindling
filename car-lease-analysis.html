@@ -71,6 +71,9 @@
   .lr-good{color:var(--good); font-weight:600;}
   .lr-mid{color:var(--mid);}
   .lr-warn{color:var(--warn);}
+  tbody tr.excl td{opacity:.4;}
+  .xmark{color:var(--warn); font-weight:700;}
+  .ok2{color:var(--good); font-weight:600;}
 
   .grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin:1.2rem 0;}
   .stat{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:1.1rem;}
@@ -90,8 +93,8 @@
     <p class="sub">Every major SUV, minivan, and sports-car lease offer available in MA / the Northeast, ranked two ways: by <strong>bang for buck</strong> (car per dollar) and by <strong>absolute cost</strong> (lowest out-of-pocket). Plus a gas-only deep dive for the fast-car shopper.</p>
     <div class="meta-line">Analysis date: June 24, 2026 · Term focus: 36-month leases (10k–12k mi/yr) · Region: Massachusetts / Northeast pricing</div>
     <div class="callout" style="margin-top:1.4rem;margin-bottom:0;border-left-color:var(--sport)">
-      <strong>Shopping for a Corvette or a fast car, and can't charge at home?</strong> Skip to
-      <a href="#fast">Fast cars &amp; Corvette — gas only</a>. EVs are flagged throughout and excluded from that section.
+      <strong>Shopping for a fast car, can't charge at home, and need 4 seats?</strong> Skip to
+      <a href="#fast">Fast cars — gas only, 4 seats</a>. EVs are excluded there, and 2-seaters (Corvette, GR Supra, Nissan Z) are flagged as not meeting the 4-seat rule.
     </div>
   </div>
 </header>
@@ -194,46 +197,49 @@
 <p style="color:var(--muted);font-size:.9rem">Note how the two lenses disagree: the Honda Prologue is the #2 value but only the #8 cheapest, while the Pathfinder tops absolute cost on a fat $4,559 drive-off. Pick the lens that matches your constraint — total value vs. monthly out-of-pocket.</p>
 
 <h2 id="fast">Fast cars &amp; Corvette — gas only, no EV</h2>
-<p>This is the section for you: every performance car here runs on gasoline (no home charging needed). It's ranked by bang-for-buck, but the <strong>Eff. /mo</strong> column is the one that bites — performance cars are the worst-leasing segment because they hold value (high residual) yet carry almost no manufacturer lease cash. The Mustang is the lone exception.</p>
+<p>This is the section for you: every performance car here runs on gasoline (no home charging needed) and is screened against your <strong>4-seat requirement</strong>. It's ranked by bang-for-buck, but the <strong>Eff. /mo</strong> column is the one that bites — performance cars are the worst-leasing segment because they hold value (high residual) yet carry almost no manufacturer lease cash. The Mustang is the lone exception.</p>
+<div class="callout warn">
+  <strong>Heads up — your two requirements collide on the Corvette.</strong> The Chevrolet Corvette Stingray is a strict <strong>two-seater</strong>, so it fails your 4-seat rule. The <strong>Toyota GR Supra</strong> and <strong>Nissan Z</strong> are 2-seaters too. They're greyed out below and dropped from the recommendations. If 4 seats is firm, the realistic "fast Corvette feeling with a back seat" is the V8 Mustang GT or a Dark Horse.
+</div>
 <div class="tablecard">
   <div class="scroll">
   <table>
-    <thead><tr><th>#</th><th>Vehicle</th><th class="num">hp*</th><th class="num">$/mo</th><th class="num">Due</th><th class="num">~MSRP</th><th class="num">Eff. /mo</th><th class="num">Lease Ratio</th><th class="num">BFB</th></tr></thead>
+    <thead><tr><th>#</th><th>Vehicle</th><th class="num">hp*</th><th class="num">Seats</th><th class="num">$/mo</th><th class="num">Due</th><th class="num">~MSRP</th><th class="num">Eff. /mo</th><th class="num">Lease Ratio</th><th class="num">BFB</th></tr></thead>
     <tbody>
-      <tr><td class="rank">1</td><td class="veh">Ford Mustang GT (V8)</td><td class="num">480</td><td class="num">$443</td><td class="num">$2,999*</td><td class="num">$48,000</td><td class="num">$526</td><td class="num lr-mid">1.10%</td><td class="bfb">91</td></tr>
-      <tr><td class="rank">2</td><td class="veh">Ford Mustang EcoBoost</td><td class="num">315</td><td class="num">$329</td><td class="num">$2,999*</td><td class="num">$34,000</td><td class="num">$412</td><td class="num lr-mid">1.21%</td><td class="bfb">83</td></tr>
-      <tr><td class="rank">3</td><td class="veh">Subaru BRZ (RWD, manual)</td><td class="num">228</td><td class="num">$348</td><td class="num">$3,414</td><td class="num">$31,000</td><td class="num">$443</td><td class="num lr-warn">1.43%</td><td class="bfb">70</td></tr>
-      <tr><td class="rank">4</td><td class="veh">Dodge Charger</td><td class="num">550+</td><td class="num">$698</td><td class="num">$2,000</td><td class="num">$51,990</td><td class="num">$754</td><td class="num lr-warn">1.45%</td><td class="bfb">69</td></tr>
-      <tr><td class="rank">5</td><td class="veh">BMW M240i (AWD)</td><td class="num">382</td><td class="num">$679</td><td class="num">$2,999*</td><td class="num">$50,000</td><td class="num">$762</td><td class="num lr-warn">1.52%</td><td class="bfb">66</td></tr>
-      <tr><td class="rank">6</td><td class="veh">Subaru WRX (AWD)</td><td class="num">271</td><td class="num">$473</td><td class="num">$2,000</td><td class="num">$35,000</td><td class="num">$529</td><td class="num lr-warn">1.51%</td><td class="bfb">66</td></tr>
-      <tr><td class="rank">7</td><td class="veh">Toyota GR Supra 3.0</td><td class="num">382</td><td class="num">$850</td><td class="num">$2,000</td><td class="num">$57,000</td><td class="num">$906</td><td class="num lr-warn">1.59%</td><td class="bfb">63</td></tr>
-      <tr><td class="rank">8</td><td class="veh" style="color:#ffd27e">Chevrolet Corvette Stingray 1LT</td><td class="num">495</td><td class="num">$1,109</td><td class="num">$2,000</td><td class="num">$72,495</td><td class="num">$1,165</td><td class="num lr-warn">1.61%</td><td class="bfb">62</td></tr>
-      <tr><td class="rank">9</td><td class="veh">Toyota GR Corolla (AWD)</td><td class="num">300</td><td class="num">$591</td><td class="num">$2,000</td><td class="num">$40,000</td><td class="num">$647</td><td class="num lr-warn">1.62%</td><td class="bfb">62</td></tr>
-      <tr><td class="rank">10</td><td class="veh">Ford Mustang Dark Horse</td><td class="num">500</td><td class="num">$863</td><td class="num">$7,471</td><td class="num">$66,000</td><td class="num">$1,071</td><td class="num lr-warn">1.62%</td><td class="bfb">61</td></tr>
-      <tr><td class="rank">11</td><td class="veh">Audi S5</td><td class="num">362</td><td class="num">$931</td><td class="num">$2,000</td><td class="num">$60,000</td><td class="num">$987</td><td class="num lr-warn">1.64%</td><td class="bfb">61</td></tr>
-      <tr><td class="rank">12</td><td class="veh">Toyota GR86</td><td class="num">228</td><td class="num">$491</td><td class="num">$2,000</td><td class="num">$31,500</td><td class="num">$547</td><td class="num lr-warn">1.74%</td><td class="bfb">58</td></tr>
-      <tr><td class="rank">13</td><td class="veh">Honda Civic Type R</td><td class="num">315</td><td class="num">$745</td><td class="num">$2,999*</td><td class="num">$47,000</td><td class="num">$828</td><td class="num lr-warn">1.76%</td><td class="bfb">57</td></tr>
-      <tr><td class="rank">14</td><td class="veh">Nissan Z</td><td class="num">400</td><td class="num">$735</td><td class="num">$2,000</td><td class="num">$43,000</td><td class="num">$791</td><td class="num lr-warn">1.84%</td><td class="bfb">54</td></tr>
-      <tr><td class="rank">15</td><td class="veh">Cadillac CT5-V</td><td class="num">360</td><td class="num">$1,083</td><td class="num">$2,000</td><td class="num">$58,000</td><td class="num">$1,138</td><td class="num lr-warn">1.96%</td><td class="bfb">51</td></tr>
+      <tr><td class="rank">1</td><td class="veh">Ford Mustang GT (V8)</td><td class="num">480</td><td class="num"><span class="ok2">4</span></td><td class="num">$443</td><td class="num">$2,999*</td><td class="num">$48,000</td><td class="num">$526</td><td class="num lr-mid">1.10%</td><td class="bfb">91</td></tr>
+      <tr><td class="rank">2</td><td class="veh">Ford Mustang EcoBoost</td><td class="num">315</td><td class="num"><span class="ok2">4</span></td><td class="num">$329</td><td class="num">$2,999*</td><td class="num">$34,000</td><td class="num">$412</td><td class="num lr-mid">1.21%</td><td class="bfb">83</td></tr>
+      <tr><td class="rank">3</td><td class="veh">Subaru BRZ (RWD, manual)</td><td class="num">228</td><td class="num"><span class="ok2">4</span>†</td><td class="num">$348</td><td class="num">$3,414</td><td class="num">$31,000</td><td class="num">$443</td><td class="num lr-warn">1.43%</td><td class="bfb">70</td></tr>
+      <tr><td class="rank">4</td><td class="veh">Dodge Charger</td><td class="num">550+</td><td class="num"><span class="ok2">5</span></td><td class="num">$698</td><td class="num">$2,000</td><td class="num">$51,990</td><td class="num">$754</td><td class="num lr-warn">1.45%</td><td class="bfb">69</td></tr>
+      <tr><td class="rank">5</td><td class="veh">BMW M240i (AWD)</td><td class="num">382</td><td class="num"><span class="ok2">4</span></td><td class="num">$679</td><td class="num">$2,999*</td><td class="num">$50,000</td><td class="num">$762</td><td class="num lr-warn">1.52%</td><td class="bfb">66</td></tr>
+      <tr><td class="rank">6</td><td class="veh">Subaru WRX (AWD)</td><td class="num">271</td><td class="num"><span class="ok2">5</span></td><td class="num">$473</td><td class="num">$2,000</td><td class="num">$35,000</td><td class="num">$529</td><td class="num lr-warn">1.51%</td><td class="bfb">66</td></tr>
+      <tr class="excl"><td class="rank">—</td><td class="veh">Toyota GR Supra 3.0</td><td class="num">382</td><td class="num"><span class="xmark">2 ✕</span></td><td class="num">$850</td><td class="num">$2,000</td><td class="num">$57,000</td><td class="num">$906</td><td class="num">1.59%</td><td class="bfb">63</td></tr>
+      <tr class="excl"><td class="rank">—</td><td class="veh">Chevrolet Corvette Stingray 1LT</td><td class="num">495</td><td class="num"><span class="xmark">2 ✕</span></td><td class="num">$1,109</td><td class="num">$2,000</td><td class="num">$72,495</td><td class="num">$1,165</td><td class="num">1.61%</td><td class="bfb">62</td></tr>
+      <tr><td class="rank">7</td><td class="veh">Toyota GR Corolla (AWD)</td><td class="num">300</td><td class="num"><span class="ok2">5</span></td><td class="num">$591</td><td class="num">$2,000</td><td class="num">$40,000</td><td class="num">$647</td><td class="num lr-warn">1.62%</td><td class="bfb">62</td></tr>
+      <tr><td class="rank">8</td><td class="veh">Ford Mustang Dark Horse</td><td class="num">500</td><td class="num"><span class="ok2">4</span></td><td class="num">$863</td><td class="num">$7,471</td><td class="num">$66,000</td><td class="num">$1,071</td><td class="num lr-warn">1.62%</td><td class="bfb">61</td></tr>
+      <tr><td class="rank">9</td><td class="veh">Audi S5</td><td class="num">362</td><td class="num"><span class="ok2">5</span></td><td class="num">$931</td><td class="num">$2,000</td><td class="num">$60,000</td><td class="num">$987</td><td class="num lr-warn">1.64%</td><td class="bfb">61</td></tr>
+      <tr><td class="rank">10</td><td class="veh">Toyota GR86</td><td class="num">228</td><td class="num"><span class="ok2">4</span>†</td><td class="num">$491</td><td class="num">$2,000</td><td class="num">$31,500</td><td class="num">$547</td><td class="num lr-warn">1.74%</td><td class="bfb">58</td></tr>
+      <tr><td class="rank">11</td><td class="veh">Honda Civic Type R</td><td class="num">315</td><td class="num"><span class="ok2">5</span></td><td class="num">$745</td><td class="num">$2,999*</td><td class="num">$47,000</td><td class="num">$828</td><td class="num lr-warn">1.76%</td><td class="bfb">57</td></tr>
+      <tr class="excl"><td class="rank">—</td><td class="veh">Nissan Z</td><td class="num">400</td><td class="num"><span class="xmark">2 ✕</span></td><td class="num">$735</td><td class="num">$2,000</td><td class="num">$43,000</td><td class="num">$791</td><td class="num">1.84%</td><td class="bfb">54</td></tr>
+      <tr><td class="rank">12</td><td class="veh">Cadillac CT5-V</td><td class="num">360</td><td class="num"><span class="ok2">5</span></td><td class="num">$1,083</td><td class="num">$2,000</td><td class="num">$58,000</td><td class="num">$1,138</td><td class="num lr-warn">1.96%</td><td class="bfb">51</td></tr>
     </tbody>
   </table>
   </div>
 </div>
-<p style="color:var(--muted);font-size:.85rem">*Horsepower is approximate, for the configured trim — used only for context, not in the scoring.</p>
+<p style="color:var(--muted);font-size:.85rem">*Horsepower is approximate, for the configured trim — used only for context, not in the scoring. &nbsp;† BRZ/GR86 are 2+2: four seats, but the rears are vestigial (fine for cargo or small kids, tight for adults). Greyed rows are 2-seaters that fail the 4-seat requirement; rank numbers reflect only the qualifying cars.</p>
 
-<div class="callout" style="border-left-color:var(--sport)">
-  <h3 style="margin-top:0">If a Corvette is the dream</h3>
-  <p style="margin-top:.3rem">Good news and a reality check. The <strong>Corvette Stingray leases at a ~1.6% ratio</strong> — middle-of-the-pack for this group and not a rip-off, because its strong resale value props up the residual (you're only financing a modest slice of an $72k car). The catch is <strong>absolute cost: ~$1,165/mo effective</strong>, because GM almost never puts lease cash on the Corvette and the 10k-mile cap is tight. If the Corvette is genuinely <em>the</em> car, leasing isn't foolish — but because Corvettes hold value so well, <strong>buying/financing usually wins if you'll keep it past 3 years.</strong> Configure the base 1LT coupe, push the drive-off to near $0, and confirm the mileage cap fits how you'll drive it.</p>
+<div class="callout warn" style="border-left-color:var(--sport)">
+  <h3 style="margin-top:0">About the Corvette — it doesn't meet your 4-seat rule</h3>
+  <p style="margin-top:.3rem">The Corvette Stingray is a <strong>two-seater</strong>, so with a firm 4-seat requirement it's out — no configuration adds a back seat. For the record on the lease itself: it runs a reasonable ~1.6% ratio (its strong resale props up the residual), but ~<strong>$1,165/mo effective</strong> in absolute terms, since GM rarely discounts it. If the 4-seat rule ever softens and the Corvette is genuinely <em>the</em> car, finance rather than lease it — Corvettes hold value, so buying wins past ~3 years. Otherwise, the closest 4-seat substitute for that V8 thrill is the Mustang GT or Dark Horse below.</p>
 </div>
 
 <div class="callout">
-  <h3 style="margin-top:0">My picks for a no-charging, fast-car shopper</h3>
+  <h3 style="margin-top:0">My picks — gas, fast, <em>and</em> 4 seats</h3>
   <ul style="margin-bottom:0">
-    <li><strong>Best value + real muscle → Ford Mustang GT.</strong> A 480-hp V8 that leases at a 1.10% ratio (~$526/mo effective) — it's the only performance car that leases like a sensible SUV, because Ford actively subsidizes it. The runaway winner here.</li>
-    <li><strong>Cheapest way into a true sports car → Subaru BRZ</strong> (~$443/mo effective). Light, rear-drive, manual, and currently a better promo than its identical-twin GR86.</li>
-    <li><strong>Speed-per-dollar sweet spot → BMW M240i</strong> (382 hp AWD) or <strong>Subaru WRX</strong> if you want rally-bred AWD for ~$529/mo.</li>
-    <li><strong>The Corvette → lease only if you'll flip in 24–36 months;</strong> otherwise finance it. Either way it's ~$1,100+/mo of car.</li>
-    <li><strong>Avoid for value → Cadillac CT5-V, Nissan Z, Civic Type R</strong> — little to no lease support, so financing is markedly cheaper.</li>
+    <li><strong>Best value + real muscle → Ford Mustang GT.</strong> A 480-hp V8, 4 seats, leasing at a 1.10% ratio (~$526/mo effective) — the only performance car that leases like a sensible SUV, because Ford actively subsidizes it. The runaway winner, and your most Corvette-like option that keeps a back seat.</li>
+    <li><strong>Cheapest way into a true sports car → Subaru BRZ</strong> (~$443/mo effective). Rear-drive, manual, and a 2+2 — four seats, though the rears are token. Currently a better promo than its identical-twin GR86.</li>
+    <li><strong>Speed-per-dollar sweet spot → BMW M240i</strong> (382 hp AWD, proper 4 seats) or <strong>Subaru WRX</strong> (271 hp AWD, roomy 5 seats) for ~$529/mo.</li>
+    <li><strong>Most power with a usable back seat → Dodge Charger</strong> (550+ hp, 5 seats) if you want straight-line muscle and don't mind ~$754/mo effective.</li>
+    <li><strong>Ruled out by 4 seats → Corvette, GR Supra, Nissan Z</strong> (all 2-seaters). <strong>Worst value among the qualifiers → Cadillac CT5-V and Civic Type R</strong> — little lease support, so finance instead.</li>
   </ul>
 </div>
 
